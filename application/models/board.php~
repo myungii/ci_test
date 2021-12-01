@@ -37,7 +37,10 @@ class Board extends CI_Model {
     function add($data = array()) {
         if($data)
        {
-            $data['regdate']    = date("Y-m-d H:i:s");
+            if(!$data['regdate'])
+            {
+                $data['regdate']    = date("Y-m-d H:i:s");
+            }
 
             $this->db->insert('board', $data);
             return true;

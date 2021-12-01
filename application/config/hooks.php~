@@ -11,7 +11,7 @@
 */
 
 $hook['display_override'][] = array(
-    'class'    => 'Yields',
+    'class'    => 'Yield',
     'function' => 'doYield',
     'filename' => 'Yield.php',
     'filepath' => 'hooks'

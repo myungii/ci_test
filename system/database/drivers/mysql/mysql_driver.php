@@ -70,7 +70,7 @@ class CI_DB_mysql_driver extends CI_DB {
 			$this->hostname .= ':'.$this->port;
 		}
 
-		return @mysql_connect($this->hostname, $this->username, $this->password, TRUE);
+		return new mysqli($this->hostname, $this->username, $this->password);
 	}
 
 	// --------------------------------------------------------------------
@@ -88,7 +88,9 @@ class CI_DB_mysql_driver extends CI_DB {
 			$this->hostname .= ':'.$this->port;
 		}
 
-		return @mysql_pconnect($this->hostname, $this->username, $this->password);
+		return new mysqli($this->hostname, $this->username, $this->password);
+
+		//return @mysql_pconnect($this->hostname, $this->username, $this->password);
 	}
 
 	// --------------------------------------------------------------------
