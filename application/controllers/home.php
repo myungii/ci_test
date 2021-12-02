@@ -38,13 +38,62 @@ class Home extends CI_Controller {
 	public function index()
 	{
 
-        $data['boardList'] = $this->Board->get_view();
+	
+		//검색
+		$searchText 		= isset($_GET['filter_name']) ? trim($_GET['filter_name']) : '';
+
+		//페이지 시작 변수
+		$page 				= isset($_GET['page']) ? trim($_GET['page']) : 1;
+
+		//현재 페이지
+		$curPage			= isset($_GET['p']) ? $_GET['p'] : 1;
+
+
+		$url 				= $_SERVER['PHP_SELF'];
+		$link_url			= $_SERVER['QUERY_STRING'];
+
+
+		//표시되는 페이지 수
+		$rowsPage 			= 3;
+
+		$total 				= $this->Board->getTotal($searchText);
+
+		$totalPage 			= $this->Board->totalPage($total, $rowsPage);
+		
+        $data['boardList'] 	= $this->Board->get_view($curPage, $rowsPage, $searchText); //리스트 출력
+		$data['curPage']	= $curPage;
+		$data['total'] 		= $total;
+		$data['rowsPage'] 	= $rowsPage;
+		$data['link_url'] 	= $link_url;
+		
+
+		$arr = array(
+			'url' 		=> $url,
+			'total'		=> $total,
+			'rowsPage'	=> $rowsPage,
+			'curPage'	=> $curPage,
+			'link_url'	=> $link_url
+			//'qry'		=> $qry
+		);
+
+		//print_r($arr);
+
+		$data['pagingArr'] = $this->Board->pageView($arr);
+
+		//print_r($this->pagination($arr));
 
 		$this->load->view('home', $data);
+		//$data['test'] = $this->Board->pageView($arr);
+		//$data['test'] = $arr;
+		//$this->load->view('pagination', $data['test']);
+		
+	
 	}
 
-	public function pagination()
+	public function pagination($arr = array())
 	{
+		//print_r( $this->Board->pageView($arr)); 
+
 		$this->load->view('pagenation');
 	}
 

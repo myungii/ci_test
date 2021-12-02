@@ -1,10 +1,18 @@
+<head>
+    <style>
+        .pagination {
+            
+        }
+    </style>
+</head>
 
 <!-- //subTitle -->
 <div id="title-area">HTML </div>
 <!-- Contents -->
 <div id="Contents" style="width:1400px; padding-left:20em;">
     <!-- filter -->
-    <form id="FrmAttendanceSearch"  onsubmit="return false">
+    <form id="FrmAttendanceSearch" method="get" action="/" >
+    
     <table class="table table-bordered table-form pad">
         <colgroup>
             <col width="120px">
@@ -25,18 +33,18 @@
     <div class="area-button">
         <button type="submit" class="btn btn-lg btn-theme" onclick="">검색</button>
     </div>
-    </form>
+    
         <!-- btn, total -->
         <h3 class="area-title">
         Total :
-        <span class="f-bold"><strong><span id="recordsTotal"></span></strong>건</span>
+        <span class="f-bold"><strong><span id="recordsTotal"><?= $total ?></span></strong>건</span>
         <div class="button-box">
             <button class="btn btn-flat-blue" onclick="location.replace('/index.php/write');" style="float: left;">게시물 등록</button>
         </div>
     </h3>
 
     <!-- list -->
-    <form id="frmAdjehyuList" onsubmit="return false">
+    
         <table class="table table-bordered table-list table-striped table-hover table-adjehyu" id="adjehyuList">
             <colgroup>
                 <col width="80px">
@@ -60,25 +68,40 @@
                 <?php 
                 if($boardList)
                 {
+                    $index = 0;
                     foreach($boardList as $list) { 
+                        $index++;
+                        $indexNum = ($total - ($curPage-1)*$rowsPage - $index) + 1;
+
                         echo '
                         <tr>
-                            <td>1</td>
+                            <td>' . $indexNum . '</td>
                             <td>
                                 <a href="/index.php/content?id='.$list->idx.'">' . $list->title . '</a></td>
                             <td>' . $list->name . '</td>
-                            <td>' . $list->regdate . '</td>
+                            <td>' . Board::setRegdate($list->regdate) . '</td>
                             <td>' . $list->cnt . '</td>
                             <td></td>
                         </tr>';
                         }
-                } ?>
+                } 
+                ?>
+                
             </tbody>
-
+            
         </table>
-
-        <div id="includePagination"></div>
-
+            
+        <div id="paging" class="area-button">
+        <ul class="pagination">
+                <?php 
+                
+                for($i=0; $row= (isset($pagingArr[$i])) ? $pagingArr[$i] : 0; $i++) {
+                    echo $pagingArr[$i];
+                }
+                     ?>
+        </ul>
+        
+        </div>
     </form>
 
 </div>
@@ -89,7 +112,7 @@
 
 $(function() {
     
-    $('#includePagination').load("pagination");
+   
 });
 
 </script>
