@@ -21,7 +21,7 @@ class Delete extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
-		$this->load->model('Board');
+		$this->load->model('Board_model');
 		//$this->load->model(array('Adjehyuclass', 'Usersclass'));
 
 		//레이아웃 파일 설정
@@ -38,7 +38,7 @@ class Delete extends CI_Controller {
 	{
         $id = $this->input->get('id');
 
-        $response = $this->Board->delete($id);
+        $response = $this->Board_model->delete($id);
 
         if($response == true)
         {

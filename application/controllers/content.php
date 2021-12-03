@@ -21,7 +21,7 @@ class Content extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
-		$this->load->model('Board');
+		$this->load->model('Board_model');
 		//$this->load->model(array('Adjehyuclass', 'Usersclass'));
 
 		//레이아웃 파일 설정
@@ -39,7 +39,7 @@ class Content extends CI_Controller {
 	{
 
         $id = $this->input->get('id');
-        $data['content'] = $this->Board->load($id);
+        $data['content'] = $this->Board_model->load($id);
 
 		$this->load->view('content', $data);
 	}

@@ -38,6 +38,7 @@
 |
 */
 $route['default_controller'] = "home";
+$route['reply'] = "reply";
 $route['404_override'] = '/';
 
 

@@ -21,7 +21,7 @@
                 <th>이름</th>
                 <td class="textAlign"><?= $content->name ?></td>
                 <th>등록일</th>
-                <td class="textAlign"><?= Board::setRegdate($content->regdate) ?></td>
+                <td class="textAlign"><?= Board_model::setRegdate($content->regdate) ?></td>
             </tr>
             <tr>
                 <th>조회수</th>

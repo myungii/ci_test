@@ -21,8 +21,8 @@ class Home extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
-		$this->load->model('Board');
-		//$this->load->model(array('Adjehyuclass', 'Usersclass'));
+		$this->load->model('Board_model');
+
 
 		//레이아웃 파일 설정
 		$this->layout = 'default';
@@ -38,7 +38,6 @@ class Home extends CI_Controller {
 	public function index()
 	{
 
-	
 		//검색
 		$searchText 		= isset($_GET['filter_name']) ? trim($_GET['filter_name']) : '';
 
@@ -48,7 +47,6 @@ class Home extends CI_Controller {
 		//현재 페이지
 		$curPage			= isset($_GET['p']) ? $_GET['p'] : 1;
 
-
 		$url 				= $_SERVER['PHP_SELF'];
 		$link_url			= $_SERVER['QUERY_STRING'];
 
@@ -56,15 +54,16 @@ class Home extends CI_Controller {
 		//표시되는 페이지 수
 		$rowsPage 			= 3;
 
-		$total 				= $this->Board->getTotal($searchText);
-
-		$totalPage 			= $this->Board->totalPage($total, $rowsPage);
+		$total 				= $this->Board_model->getTotal($searchText);
+		$totalPage 			= $this->Board_model->totalPage($total, $rowsPage);
 		
-        $data['boardList'] 	= $this->Board->get_view($curPage, $rowsPage, $searchText); //리스트 출력
+        $data['boardList'] 	= $this->Board_model->get_view($curPage, $rowsPage, $searchText); //리스트 출력
+		$data['noticeList'] = $this->Board_model->get_noticeView();
 		$data['curPage']	= $curPage;
 		$data['total'] 		= $total;
 		$data['rowsPage'] 	= $rowsPage;
 		$data['link_url'] 	= $link_url;
+		$data['searchText'] = $searchText;
 		
 
 		$arr = array(
@@ -73,28 +72,17 @@ class Home extends CI_Controller {
 			'rowsPage'	=> $rowsPage,
 			'curPage'	=> $curPage,
 			'link_url'	=> $link_url
-			//'qry'		=> $qry
+
 		);
 
-		//print_r($arr);
+		$data['pagingArr'] = $this->Board_model->pageView($arr);
 
-		$data['pagingArr'] = $this->Board->pageView($arr);
 
-		//print_r($this->pagination($arr));
 
 		$this->load->view('home', $data);
-		//$data['test'] = $this->Board->pageView($arr);
-		//$data['test'] = $arr;
-		//$this->load->view('pagination', $data['test']);
+
 		
 	
-	}
-
-	public function pagination($arr = array())
-	{
-		//print_r( $this->Board->pageView($arr)); 
-
-		$this->load->view('pagenation');
 	}
 
 

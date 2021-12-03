@@ -22,6 +22,10 @@
 
     <script src="/asset/adminsin/js/jquery.form.js"></script>
     <script src="/asset/adminsin/js/common.js"></script>
+    
+    <!-- write editor -->
+    <script src="/asset/summernote/summernote-lite.js"></script>
+    <link rel="stylesheet" href="/asset/summernote/summernote-lite.css">
 
 
 </head>
@@ -32,7 +36,7 @@
 <!--                <h1 class="logo"><a href="#"><img src="/assetsin/adminsin/images/logo_white.png" alt=""></a></h1>-->
                 <nav class="gnb">
                     <ul>
-                        <li class="<?=($this->left=='left3')?'selected':''?>"><a href="">공지사항
+                        <li class="<?=($this->left=='left3')?'selected':''?>"><a href="/">공지사항
                         </a></li>
                     </ul>
                 </nav>

@@ -1,6 +1,3 @@
-<script src="/asset/summernote/summernote-lite.js"></script>
-<link rel="stylesheet" href="/asset/summernote/summernote-lite.css">
-
 <!-- //subTitle -->
 <div id="title-area">글쓰기 </div>
     <!-- Contents -->
@@ -36,7 +33,7 @@
          <textarea id="summernote" name="editordata"></textarea>
                
          <div class="area-button">
-            <button type="submit" name="save" class="btn btn-lg btn-theme" onclick="">저장</button>
+            <button type="button" name="save" class="btn btn-lg btn-theme" onclick="">저장</button>
             <button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href='/';">목록</button>
         </div>
 
@@ -52,7 +49,7 @@ $(document).ready(function () {
       height: 500,
       width: 1120,              
       minHeight: 500,            
-      maxHeight: 500,            
+      maxHeight: 500, 
       focus: true,                  
       lang: "ko-KR",					
       placeholder: '내용을 입력해주세요.',	
@@ -72,6 +69,54 @@ $(document).ready(function () {
       fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
         '50', '72']
     });
+
+    $(document).on("click", "button[name='save']" , function() {
+        let name = $('input[name=name]').val();
+        let title = $('input[name=title]').val();
+        let content = $('#summernote').val()
+
+        let arr  = [name, title, content];
+        let arr2 = ['이름', '제목', '내용'];
+
+        for(i=0; i<=arr.length; i++)
+        {
+          if(arr[i] == '')
+          {
+            alert(arr2[i] + '을(를) 입력해주세요.');
+            return false;
+          }
+        }
+
+        $.ajax({
+          url      : "/index.php/write/save",
+          dataType : "json",
+          contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+          data     : { "name"    : name, 
+                       "title"    : title,
+                       "content"  : content
+                      },
+          type   : "POST"
+        , success : function(r)
+        {
+            if(r == '200') {
+              alert("저장되었습니다.");
+              location.replace('/');
+              return true;
+            } else {
+              alert("오류발생.");
+              return false;
+            }
+        }
+        , complete : function()
+        {
+            
+        }
+      }); //ajax end
+
+    }); //click end
+
   });
+
+
 
 </script>

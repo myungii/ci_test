@@ -21,7 +21,7 @@ class Edit extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
-		$this->load->model('Board');
+		$this->load->model('Board_model');
 		//$this->load->model(array('Adjehyuclass', 'Usersclass'));
 
 		//레이아웃 파일 설정
@@ -39,7 +39,7 @@ class Edit extends CI_Controller {
 	{
 
         $id = $_GET['id'];
-        $data['load'] = $this->Board->load($id);
+        $data['load'] = $this->Board_model->load($id);
 
 		$this->load->view('edit', $data);
 	}
@@ -55,7 +55,7 @@ class Edit extends CI_Controller {
 
 		if($data['title'])
 		{
-			$response = $this->Board->modify($data);
+			$response = $this->Board_model->modify($data);
 
 			if($response == true)
 			{

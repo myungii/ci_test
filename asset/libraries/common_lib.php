@@ -65,37 +65,12 @@ class Common_lib {
 		}
 	}
 
-    function total_adjehyu_logo_total() {
-        if (in_array($_SERVER['HTTP_HOST'], array('direct-sks.co.kr', 'direct-sks.co.test'))){
-            $this->ci->db->select('COUNT(idx) as total');
-            $this->ci->db->where('substr(regdate,1,10)', date("Y-m-d"));
-            $query = $this->ci->db->get("iiop_adjehyu_cokr");
-            $row = $query->row();
-            $this->total = $row->total;
-            return $row->total;
-        } else {
-            $this->ci->db->select('COUNT(idx) as total');
-            $this->ci->db->where('substr(regdate,1,10)', date("Y-m-d"));
-            $query = $this->ci->db->get("iiop_adjehyu");
-            $row = $query->row();
-            $this->total = $row->total;
-            return $row->total;
-        }
-    }
 
-    function total_adjehyu_expo_logo_total(){
+    //새글 개수(lnb)
+    function today_new(){
         $this->ci->db->select('COUNT(idx) as total');
         $this->ci->db->where('substr(regdate,1,10)', date("Y-m-d"));
-        $query = $this->ci->db->get("iiop_expo");
-        $row = $query->row();
-        $this->total = $row->total;
-        return $row->total;
-    }
-
-    function total_adjehyu_logo_total2(){
-        $this->ci->db->select('COUNT(idx) as total');
-        $this->ci->db->where('substr(regdate,1,10)', date("Y-m-d"));
-        $query = $this->ci->db->get("iiop_adjehyu_cokr2");
+        $query = $this->ci->db->get("board");
         $row = $query->row();
         $this->total = $row->total;
         return $row->total;

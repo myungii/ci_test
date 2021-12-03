@@ -1,8 +1,12 @@
 <head>
     <style>
-        .pagination {
-            
+        #noticeList {
+            font-weight : bold;
         }
+        #new {
+            color : red;
+        }
+ 
     </style>
 </head>
 
@@ -12,7 +16,7 @@
 <div id="Contents" style="width:1400px; padding-left:20em;">
     <!-- filter -->
     <form id="FrmAttendanceSearch" method="get" action="/" >
-    
+    <input type="hidden" name="p" value="<?= $curPage ?>">
     <table class="table table-bordered table-form pad">
         <colgroup>
             <col width="120px">
@@ -23,7 +27,7 @@
             <tr>
                 <th>제목</th>
                 <td>
-                    <input type="text" name="filter_name" class="form-control input-xsm"  style="width:1022px;"  value="" autocomplete="off">
+                    <input type="text" name="filter_name" class="form-control input-xsm"  style="width:1022px;"  value="<?= $searchText ?>" autocomplete="off">
                 </td>
             </tr>
 
@@ -33,6 +37,7 @@
     <div class="area-button">
         <button type="submit" class="btn btn-lg btn-theme" onclick="">검색</button>
     </div>
+    </form>
     
         <!-- btn, total -->
         <h3 class="area-title">
@@ -42,7 +47,7 @@
             <button class="btn btn-flat-blue" onclick="location.replace('/index.php/write');" style="float: left;">게시물 등록</button>
         </div>
     </h3>
-
+    
     <!-- list -->
     
         <table class="table table-bordered table-list table-striped table-hover table-adjehyu" id="adjehyuList">
@@ -52,7 +57,6 @@
                 <col width="100px">
                 <col width="100px">
                 <col width="100px">
-                <col width="80px">
             </colgroup>
             <thead>
             <tr>
@@ -61,12 +65,25 @@
                 <th>이름</th>
                 <th>등록일</th>
                 <th>조회수</th>
-                <th>관리</th>
             </tr>
             </thead>
             <tbody>
                 <?php 
-                if($boardList)
+                if($noticeList)
+                {
+                    foreach($noticeList as $notice) { 
+                       echo '
+                        <tr>
+                            <td id="noticeList">공지</td>
+                            <td>
+                                <a href="/index.php/content?id='.$notice->idx.'">' . $notice->title . '</a></td>
+                            <td>' . $notice->name . '</td>
+                            <td>' . Board_model::setRegdate($notice->regdate) . '</td>
+                            <td>' . $notice->cnt . '</td>
+                        </tr>';
+                    }
+                } 
+                if ($boardList)
                 {
                     $index = 0;
                     foreach($boardList as $list) { 
@@ -77,11 +94,10 @@
                         <tr>
                             <td>' . $indexNum . '</td>
                             <td>
-                                <a href="/index.php/content?id='.$list->idx.'">' . $list->title . '</a></td>
+                                <a href="/index.php/content?id='.$list->idx.'">' . $list->title . Board_model::displayNew($list->regdate) . '</a></td>
                             <td>' . $list->name . '</td>
-                            <td>' . Board::setRegdate($list->regdate) . '</td>
+                            <td>' . Board_model::setRegdate($list->regdate) . '</td>
                             <td>' . $list->cnt . '</td>
-                            <td></td>
                         </tr>';
                         }
                 } 
@@ -102,7 +118,7 @@
         </ul>
         
         </div>
-    </form>
+    
 
 </div>
 

@@ -96,7 +96,11 @@ body {
 
 /*layout*/
 .noticetop{ font-weight: bold;}
+/*
 .wrap {width: 100%; min-width: 1880px; margin: 0 auto; background: #fff; overflow: hidden;}
+*/
+.wrap {width: 100%; min-width: 1880px; margin: 0 auto; background: #fff;}
+
 /*header*/
 header {width: 100%;background: #3b434b; height: 65px; color: #fff; z-index: 100;font-family: 'Noto Sans KR', sans-serif; }
 header .inner {width: 100%; height: 100%; position: relative;}
