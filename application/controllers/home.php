@@ -21,7 +21,7 @@ class Home extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
-		$this->load->model('Board_model');
+		$this->load->model('board_model');
 
 
 		//레이아웃 파일 설정
@@ -54,11 +54,11 @@ class Home extends CI_Controller {
 		//표시되는 페이지 수
 		$rowsPage 			= 3;
 
-		$total 				= $this->Board_model->getTotal($searchText);
-		$totalPage 			= $this->Board_model->totalPage($total, $rowsPage);
+		$total 				= $this->board_model->getTotal($searchText);
+		$totalPage 			= $this->board_model->totalPage($total, $rowsPage);
 		
-        $data['boardList'] 	= $this->Board_model->get_view($curPage, $rowsPage, $searchText); //리스트 출력
-		$data['noticeList'] = $this->Board_model->get_noticeView();
+        $data['boardList'] 	= $this->board_model->get_view($curPage, $rowsPage, $searchText); //리스트 출력
+		$data['noticeList'] = $this->board_model->get_noticeView();
 		$data['curPage']	= $curPage;
 		$data['total'] 		= $total;
 		$data['rowsPage'] 	= $rowsPage;
@@ -75,7 +75,7 @@ class Home extends CI_Controller {
 
 		);
 
-		$data['pagingArr'] = $this->Board_model->pageView($arr);
+		$data['pagingArr'] = $this->board_model->pageView($arr);
 
 
 

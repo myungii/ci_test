@@ -7,7 +7,7 @@
                         <span class="badge  " style="background:#eb2c2c" data-toggle="tooltip" title="새글" style="width:25px;height:14px;" >
                             <?= Board_model::newCnt() ?>
                         </span>
-                   <?php } ?>  
+                   <?php } ?>
             </a></li>
         </ul>
     </li>
