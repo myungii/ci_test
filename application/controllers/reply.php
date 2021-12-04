@@ -22,12 +22,16 @@ class Reply extends CI_Controller {
 		parent::__construct();
 
 		$this->load->model('Reply_model');
+		$this->load->model('Board_model');
 
 
 		//레이아웃 파일 설정
-		$this->layout = 'default';
-		$this->yield = true;
-		$this->left = 'left3' ;
+		//$this->layout = 'default';
+		$this->layout = '';
+		//$this->yield = true;
+		$this->yield = false;
+		//$this->left = 'left3' ;
+		$this->left = '' ;
 
 		$this->param = $this->input->post(NULL, true);
         $this->temps_code_list = $this->config->item( 'temps_code' ); //

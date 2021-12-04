@@ -33,7 +33,6 @@ class Board_model extends CI_Model {
             return $this->db->query($query)->result();                 
         }
 
-        
 	}
 
     //공지 리스트 출력
@@ -160,13 +159,12 @@ class Board_model extends CI_Model {
     static function displayNew($regdate='')
     {
         //하루 단위
-        $time = strtotime($regdate);
-        $today = time();
-        $result = (($today - $time)/60/60/24)*10;
+        $time		= strtotime($regdate);
+		$today		= time();
+		$result = (($today - $time)/60/60/24)*10;
 
-
-
-        if($result <= 1)
+        //if($result <= 1)
+        if($result <= 7)
         {
             return " <span id='new'>new</span>";
         }

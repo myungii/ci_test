@@ -42,6 +42,7 @@ class Content extends CI_Controller {
         $data['content'] = $this->Board_model->load($id);
 
 		$this->load->view('content', $data);
+		$this->load->view('reply');
 	}
 
 

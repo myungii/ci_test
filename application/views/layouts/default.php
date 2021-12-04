@@ -27,6 +27,19 @@
     <script src="/asset/summernote/summernote-lite.js"></script>
     <link rel="stylesheet" href="/asset/summernote/summernote-lite.css">
 
+	<!-- reply -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/asset/reply/css/reply.css">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+   <style>
+       #form-commentInfo {
+                          padding-left : 20em;
+   				         }
+       #comments {
+     	                  padding-left : 20em;
+      }
+   </style>
+
 
 </head>
 <body>
