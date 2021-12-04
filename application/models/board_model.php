@@ -159,12 +159,15 @@ class Board_model extends CI_Model {
     static function displayNew($regdate='')
     {
         //하루 단위
-        $time		= strtotime($regdate);
-		$today		= time();
-		$result = (($today - $time)/60/60/24)*10;
+        //$time		= strtotime($regdate);
+		//$today		= time();
+		//$result = (($today - $time)/60/60/24)*10;
+
+		$time = substr($regdate,0, 10);
+		$today = date("Y-m-d");
 
         //if($result <= 1)
-        if($result <= 7)
+        if($time == $today)
         {
             return " <span id='new'>new</span>";
         }
