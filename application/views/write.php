@@ -3,7 +3,7 @@
     <!-- Contents -->
     <div id="Contents" style="width:1400px; padding-left:20em;">
 
-    <form id="frmAdjehyuList" method="post" action="/index.php/write/save">
+    <form id="write_form" enctype='multipart/form-data' method="post" action="/index.php/write/save">
     
         <table class="table table-bordered table-list">
             <colgroup>
@@ -26,6 +26,11 @@
                 <td><input type="text" name="title" value="" id="title"  style="width:980px;"></td>
             </tr> 
 
+            <tr>
+                <th>파일</th>
+                <td><input type="file" name="upload_file" value="" id="upload_file"  style="width:980px;"></td>
+            </tr> 
+
             </tbody>
 
         </table>  <br>
@@ -33,7 +38,7 @@
          <textarea id="summernote" name="editordata"></textarea>
                
          <div class="area-button">
-            <button type="button" name="save" class="btn btn-lg btn-theme" onclick="">저장</button>
+            <button type="submit" name="save" class="btn btn-lg btn-theme" onclick="">저장</button>
             <button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href='/';">목록</button>
         </div>
 
@@ -69,14 +74,15 @@ $(document).ready(function () {
       fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
         '50', '72']
     });
+$("#write_form").on("submit" , function(e) { //$(document).on("click", "button[name='save']" , function(e) { e.preventDefault();	
 
-    $(document).on("click", "button[name='save']" , function() {
-        let name = $('input[name=name]').val();
-        let title = $('input[name=title]').val();
-        let content = $('#summernote').val()
+        let name			= $('input[name=name]').val();
+        let title			= $('input[name=title]').val();
+        let upload_file		= $('input[name=upload_file]')[0].files[0];
+        let content			= $('#summernote').val();
 
-        let arr  = [name, title, content];
-        let arr2 = ['이름', '제목', '내용'];
+        let arr				= [name, title, content];
+        let arr2			= ['이름', '제목', '내용'];
 
         for(i=0; i<=arr.length; i++)
         {
@@ -86,15 +92,27 @@ $(document).ready(function () {
             return false;
           }
         }
-
+		
+		console.log("name : " + name);
+		let formData = new FormData();
+		formData.append("name", $('input[name=name]').val());
+		formData.append("title", title);
+		formData.append("content", content);
+		formData.append("file_upload", upload_file);
+		
+		console.log("sdqdsq : " + formData["name"]);
         $.ajax({
           url      : "/index.php/write/save",
-          dataType : "json",
           contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-          data     : { "name"    : name, 
-                       "title"    : title,
-                       "content"  : content
+
+		/*
+		  data     : { "name"			: name, 
+                       "title"			: title,
+                       "content"		: content,
                       },
+		*/
+		data		: JSON.stringify(formData),
+		contentType : false,
           type   : "POST"
         , success : function(r)
         {
@@ -112,6 +130,7 @@ $(document).ready(function () {
             
         }
       }); //ajax end
+
 
     }); //click end
 

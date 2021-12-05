@@ -43,9 +43,9 @@ class Write extends CI_Controller {
 	function save()
 	{
 		//저장
-		$name		= $_POST['name'];
-		$title		= $_POST['title'];
-		$content	= $_POST['content'];
+		$name		= $this->input->post('name');
+		$title		= $this->input->post('title');
+		$content	= $this->input->post('content');
 
 		$data = array(
 					'name' 		=> $name,
@@ -53,6 +53,20 @@ class Write extends CI_Controller {
 					'content' 	=> $content
 				);
 	
+	print_r($data); exit;
+		if(isset($_FILES["upload_file"]["name"]))
+		{
+			$config['upload_path'] = '../../upload/';
+			$config['allowd_types'] = 'jpg|jpeg|png|gif';
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('upload_file'))
+			{
+				echo $this->upload->display_errors();
+			} else {
+				array_push($data, $this->upload->data());
+			}
+		}
+
 		$result = $this->Board_model->add($data);
 		
 		if($result == true)
