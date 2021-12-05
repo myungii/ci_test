@@ -53,7 +53,8 @@ class Write extends CI_Controller {
 					'content' 	=> $content
 				);
 	
-	print_r($data); exit;
+	print_r($_FILES["upload_file"]["name"]);
+
 		if(isset($_FILES["upload_file"]["name"]))
 		{
 			$config['upload_path'] = '../../upload/';
@@ -63,7 +64,8 @@ class Write extends CI_Controller {
 			{
 				echo $this->upload->display_errors();
 			} else {
-				array_push($data, $this->upload->data());
+				$fileName = $this->upload->data();
+				array_push($data, $fileName['file_name']);
 			}
 		}
 

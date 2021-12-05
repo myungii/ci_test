@@ -74,7 +74,10 @@ $(document).ready(function () {
       fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
         '50', '72']
     });
-$("#write_form").on("submit" , function(e) { //$(document).on("click", "button[name='save']" , function(e) { e.preventDefault();	
+$("#write_form").on("submit" , function(e) { 
+	//$(document).on("click", "button[name='save']" , function(e) { 
+		
+		e.preventDefault();	
 
         let name			= $('input[name=name]').val();
         let title			= $('input[name=title]').val();
@@ -93,17 +96,17 @@ $("#write_form").on("submit" , function(e) { //$(document).on("click", "button[n
           }
         }
 		
-		console.log("name : " + name);
+		console.log("file : " + upload_file);
 		let formData = new FormData();
 		formData.append("name", $('input[name=name]').val());
 		formData.append("title", title);
-		formData.append("content", content);
-		formData.append("file_upload", upload_file);
-		
-		console.log("sdqdsq : " + formData["name"]);
-        $.ajax({
+		formData.append("content", $('#summernote').val());
+		formData.append("upload_file", upload_file);
+
+
+		$.ajax({
           url      : "/index.php/write/save",
-          contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+          //contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 
 		/*
 		  data     : { "name"			: name, 
@@ -111,13 +114,13 @@ $("#write_form").on("submit" , function(e) { //$(document).on("click", "button[n
                        "content"		: content,
                       },
 		*/
-		data		: JSON.stringify(formData),
+		//data		: JSON.stringify(formData),
+		data		: formData,
 		contentType : false,
-          type   : "POST"
-        , success : function(r)
-        {
-            if(r == '200') {
-              alert("저장되었습니다.");
+          method   : "POST",
+		  contentType : false,
+		  cache : false,
+		  processData : false , success : function(r) { if(r == '200') { alert("저장되었습니다.");
               location.replace('/');
               return true;
             } else {
