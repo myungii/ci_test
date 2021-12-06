@@ -6,6 +6,7 @@ const btn       = document.querySelector("#submit");
 const mainCommentCount = document.querySelector('#count'); 
 
 
+console.log('pid : ' + pid + ' & co_name : ' + co_name + ' & co_content : ' + co_content + ' & co_date : ' + co_date);
 //맨위 댓글 숫자 세는거. 
 //타임스템프 만들기 
 
@@ -22,7 +23,6 @@ function generateTime(){
 
 
 function showComment(currentVal, nameVal, pid) {
-       console.log('currentVal : ' + currentVal + ", nameVal : " + nameVal + " , pid : " + pid);
 
        var dataObj          = new Object();
        dataObj['pid']       = pid;
@@ -42,6 +42,7 @@ function showComment(currentVal, nameVal, pid) {
         if(data == '200') { 
             alert("등록되었습니다.");
                 location.replace('/index.php/content?id='+pid);
+
                 return true;
             } else {
                 alert("오류발생.");

@@ -22,6 +22,7 @@ class Content extends CI_Controller {
 		parent::__construct();
 
 		$this->load->model('Board_model');
+		$this->load->model('Reply_model');
 		//$this->load->model(array('Adjehyuclass', 'Usersclass'));
 
 		//레이아웃 파일 설정
@@ -43,6 +44,9 @@ class Content extends CI_Controller {
 		$data['fileInfo']	= $this->Board_model->fileLoad($id);
 
 		$reply['pid'] 		= $id;
+		$reply['reply']		= $this->Reply_model->get_view($id);
+		$reply['total']		= $this->Reply_model->getTotal($id);
+
 
 		$this->load->view('content', 	$data);
 		$this->load->view('reply', 		$reply);

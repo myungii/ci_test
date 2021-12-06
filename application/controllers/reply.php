@@ -46,7 +46,9 @@ class Reply extends CI_Controller {
 		$data['name'] 		= $this->input->get('name');
 		$data['content'] 	= $this->input->get('content');
 
-		print_r($data); exit;
+		$data['reply']		= $this->Reply_model->get_view($data['pid']);
+
+print_r($data);
 
 		$this->load->view('reply');
 	
@@ -63,10 +65,9 @@ class Reply extends CI_Controller {
 
 		$dataList = json_decode( $_POST['dataObj']);
 
-
 		$result = $this->Reply_model->add($dataList);
 
-		if($result == '1')
+		if($result == true)
 		{
 			echo "200";
 			exit;

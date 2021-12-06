@@ -12,28 +12,34 @@ class Reply_model extends CI_Model {
     }
 
     //리스트 출력
-	function get_view() {
+	function get_view($pid) {
 
-        $query = 'SELECT * FROM reply WHERE title like ORDER BY regdate DESC';
+        $query = 'SELECT * FROM reply where pid = ' . $pid . ' ORDER BY regdate DESC';
+/*
+		$this->db->where('pid', $pid);
+		$this->db->select('*');
+		$this->db->from('reply');
+		$this->db->order_by('regdate', 'desc');
+        //return $this->db->query($query)->result();                 
+*/
 
-        return $this->db->query($query)->result();                 
+		//return $this->db->result();
  
+        return $this->db->query($query)->result();                 
 
 	}
 
     //추가
     function add($data) {
 
-        print_r($data);
-
         $param = array(
-                    "pid"       => (int)$data->pid,
+                    "pid"       => (int)($data->pid),
                     "name"      => $data->name,
                     "content"   => $data->content,
                     "regdate"   => date("Y-m-d H:i:s")
                 );
         
-        if($data < 0)
+        if(empty($data))
         {
             return false;
         }
@@ -90,10 +96,11 @@ class Reply_model extends CI_Model {
 
 
     //총 게시글 개수
-    function getTotal() {
-   
+    function getTotal($pid) {
+		$query = "SELECT COUNT(*) as cnt FROM reply WHERE pid = " . $pid;
+		
         
-        return '';
+        return $this->db->query($query)->row('cnt');
     }
 
 
