@@ -13,7 +13,7 @@ class Board_model extends CI_Model {
 
 	function __construct($arr = 0) {
 		parent::__construct();
-		SELF::$db = &get_instance()->db;
+		self::$db = &get_instance()->db;
 
     }
 
@@ -64,6 +64,18 @@ class Board_model extends CI_Model {
       return false;
 	}
 
+    //파일 업로드
+    function fileUpload($data) {
+        if($data < 0)
+        {
+            return false;
+        }
+        $this->db->insert('board_file', $data);
+        return true;
+    }
+
+
+
     //삭제
     function delete($idx) {
         if($idx)
@@ -97,6 +109,50 @@ class Board_model extends CI_Model {
         return $rowData;
         
     }
+
+    function fileLoad($boardId) {
+
+        if(!$boardId) {
+            return false;
+        }
+
+        $query      = "SELECT * FROM board_file WHERE boardId = ". $boardId;
+        $rowData    = $this->db->query($query)->row();
+
+        return $rowData;
+        
+    }
+
+    //파일수정
+    function fileModify($data = array()) {
+
+        $dataArr    = array();
+        $where      = array (
+                        "idx"       => $data['idx'],
+                        "baordId"   => $data['boardId']
+                    );
+
+        if($data['idx'] > 0 )
+        {
+            $dataArr['fileName']            = $data['fileName'];
+            $dataArr['fileSize']            = $data['fileSize'];
+            $dataArr['filePath']            = $data['filePath'];
+            $dataArr['fileType']            = $data['fileType'];
+            $dataArr['regdate']             = date("Y-m-d H:i:s");
+            $dataArr['fullFilePath']        = $data['fullFilePath'];
+
+            $this->db->update('board_file', $dataArr, $where);
+
+            if($this->db->affected_rows() > 0)
+            {
+                return true;
+            } 
+        }
+
+        return false;
+    }
+    
+
 
     private function _increaseCnt($idx) {
 
@@ -180,7 +236,7 @@ class Board_model extends CI_Model {
     {
         $query = 'SELECT count(idx) AS cnt FROM board WHERE substr(regdate, 1, 10) = substr(now(), 1, 10)';
 
-        return SELF::$db->query($query)->row('cnt');
+        return self::$db->query($query)->row('cnt');
     }
 
 
@@ -216,14 +272,14 @@ class Board_model extends CI_Model {
         }
 
 
-        $Info = $this->_pageList($totalcnt, $rowsPage, $curPage, $rowsPage);
+        $Info = $this->_pageList($totalcnt, $rowsPage, $curPage, 10);
         
         $result = array();
         if ($Info['current_block'] > 2) {
-            array_push($result, "<li><a href='" . $url . "&" .  $link_url . "'>◀</a></li> ");
+            array_push($result, "<li><a href='" . $url . "?p=1&" .  $link_url . "'>◀</a></li> ");
         }
         if ($Info['current_block'] > 1) {
-            array_push($result, "<li><a href='" . $url . "&" . $link_url . "'>◁</a></li> ");
+            array_push($result, "<li><a href='" . $url . "?p=" . $Info['prev'] . "&" . $link_url . "'>◁</a></li> ");
         }
         foreach ($Info['current'] as $w) {
             

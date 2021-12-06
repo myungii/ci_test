@@ -11,6 +11,7 @@
                 <col>
                 <col width="120px">
                 <col>
+                <col width="120px">
             </colgroup>
             <tbody>
             <tr>
@@ -27,10 +28,18 @@
                 <th>조회수</th>
                 <td class="textAlign" colspan="3"><?= $content->cnt ?></td>
             </tr>
+            
             <tr>
                 <th>파일</th>
-                <td class="textAlign" colspan="3"></td>
+                <td class="textAlign" colspan="3">
+                <?php if(!empty($fileInfo)) { ?>
+                    <a href="/uploads/<?= $fileInfo->fileName ?>" download>
+                        <?= $fileInfo->fileName ?>
+                    </a> 
+                    <?php  } ?>
+                </td>
             </tr>
+      
             <tr>
                 <td class="textAlign" colspan="4" style="vertical-align: text-top;height:150px;line-height:15px;padding:10 10 10 10;word-wrap:break-word;word-break:break-all">
                     <?= $content->content ?>
@@ -43,7 +52,7 @@
         
         <div class="area-button">
             <button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href='/';">목록</button>
-            <button type="button" class="btn btn-lg btn-theme" onclick="location.replace('/index.php/edit?id=<?=$content->idx?>')">수정</button>
+            <button type="button" class="btn btn-lg btn-theme" onclick="location.replace('/index.php/edt?id=<?=$content->idx?>')">수정</button>
             <button type="button" class="btn btn-lg" onclick="location.replace('/index.php/delete?id=<?=$content->idx?>')">삭제</button>
         </div>
 

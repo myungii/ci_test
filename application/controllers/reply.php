@@ -42,9 +42,39 @@ class Reply extends CI_Controller {
 	public function index()
 	{
 
+		$data['pid'] 		= $this->input->get('pid');
+		$data['name'] 		= $this->input->get('name');
+		$data['content'] 	= $this->input->get('content');
+
+		print_r($data); exit;
 
 		$this->load->view('reply');
 	
+	}
+
+	public function save()
+	{
+		/*
+		$data['pid'] 		= $this->input->post('pid');
+		$data['name'] 		= $this->input->post('name');
+		$data['content'] 	= $this->input->post('content');
+		$data['regdate']	= date("Y-m-d H:i:s");
+		*/
+
+		$dataList = json_decode( $_POST['dataObj']);
+
+
+		$result = $this->Reply_model->add($dataList);
+
+		if($result == '1')
+		{
+			echo "200";
+			exit;
+		}
+		else {
+			echo "99";
+		}
+
 	}
 
 

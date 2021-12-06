@@ -42,6 +42,7 @@ class Write extends CI_Controller {
 
 	function save()
 	{
+
 		//저장
 		$name		= $this->input->post('name');
 		$title		= $this->input->post('title');
@@ -51,35 +52,75 @@ class Write extends CI_Controller {
 					'name' 		=> $name,
 					'title' 	=> $title,
 					'content' 	=> $content
-				);
-	
-	print_r($_FILES["upload_file"]["name"]);
+			);
+		$result = $this->Board_model->add($data);
+		$lastId = (int)$this->db->insert_id();
 
-		if(isset($_FILES["upload_file"]["name"]))
+
+		//파일 업로드 및 저장
+		$config['upload_path'] 		= './uploads';
+		$config['allowed_types']	= 'gif|jpg|png';
+		$config['max_size']			= '0';
+		$config['max_width']		= '0';
+		$config['max_height']		= '0';
+
+		$this->load->library('upload', $config);
+
+		if(!$this->upload->do_upload('upload_file'))
 		{
-			$config['upload_path'] = '../../upload/';
-			$config['allowd_types'] = 'jpg|jpeg|png|gif';
-			$this->load->library('upload', $config);
-			if(!$this->upload->do_upload('upload_file'))
-			{
-				echo $this->upload->display_errors();
-			} else {
-				$fileName = $this->upload->data();
-				array_push($data, $fileName['file_name']);
-			}
+			$error = array('error' => $this->upload->display_errors());
+			
+			var_dump($error);
+			exit;
+		}
+		else{
+			$fileInfo =  $this->upload->data();
+
+			//print_r($fileInfo);
+			
+
+			$fileData = array(
+								'boardId' 		=> $lastId,
+								'fileName' 		=> $fileInfo['file_name'],
+								'fileSize'		=> intval($fileInfo['file_size']),
+								'filePath'		=> $fileInfo['file_path'],
+								'fileType'		=> $fileInfo['file_type'],
+								'regdate'		=> date("Y-m-d H:i:s"),
+								'fullFilePath'	=> $fileInfo['full_path']
+						);
+			
+			$this->Board_model->fileUpload($fileData);
+			
 		}
 
-		$result = $this->Board_model->add($data);
+
+		//파일 업로드			
 		
-		if($result == true)
+		/*
+		$targetDir = 'C:\upload';
+		$targetFile= $_FILES["upload_file"]["name"];
+		$fileType 	= array('jpg', 'jpeg', 'png', 'gif');
+		$ext		= array_pop(explode('.', $targetFile));
+
+		if(!in_array($ext, $fileType))
+		{
+			echo "허용되지 않는 확장자입니다.";
+			exit;
+		}
+
+		move_uploaded_file($_FILES['upload_file']['tmp_name'], "$targetDir/$targetFile");
+		*/
+		
+		if($result == '1')
 		{
 			echo "200";
 			exit;
 		}
-		
-		echo "99";
-		
+		else {
+			echo "99";
+		}
 	}
+
 
 	function preedit() 
 	{

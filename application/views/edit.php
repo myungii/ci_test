@@ -6,7 +6,7 @@
     <!-- Contents -->
     <div id="Contents" style="width:1400px; padding-left:20em;">
 
-    <form id="frmAdjehyuList" method="post" action="/index.php/edit/save">
+    <form id="edit_form" method="post" action="/index.php/edit/save">
     <input type="hidden" name="id" value="<?= $load->idx ?>">
         <table class="table table-bordered table-list">
             <colgroup>
@@ -27,6 +27,10 @@
             <tr>
                 <th>제목</th>
                 <td><input type="text" name="title" value="<?= $load->title ?>" id="title"  style="width:980px;"></td>
+            </tr> 
+            <tr>
+                <th>파일</th>
+                <td><input type="file" name="upload_file" value="" id="upload_file"  style="width:980px;"></td>
             </tr> 
 
             </tbody>
@@ -72,6 +76,67 @@ $(document).ready(function () {
       fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
         '50', '72']
     });
+
+
+    $("#edit_form").on("submit" , function(e) { 
+	//$(document).on("click", "button[name='save']" , function(e) { 
+		
+		e.preventDefault();	
+
+        let name			    = $('input[name=name]').val();
+        let title			    = $('input[name=title]').val();
+        let upload_file		= $('input[name=upload_file]')[0].files[0];
+        let content			  = $('#summernote').val();
+
+        let arr				    = [name, title, content];
+        let arr2			    = ['이름', '제목', '내용'];
+
+        for(i=0; i<=arr.length; i++)
+        {
+          if(arr[i] == '')
+          {
+            alert(arr2[i] + '을(를) 입력해주세요.');
+            return false;
+          }
+        }
+
+		let formData = new FormData();
+		formData.append("name",         name);
+		formData.append("title",        title);
+		formData.append("content",      $('#summernote').val());
+		formData.append("upload_file",  upload_file);
+    
+    $("input[name=notice]:checked").each(function() {
+        formData.append("notice",    $(this).val());
+    });
+
+		$.ajax({
+          url      : "/index.php/edit/save",
+    
+		  data		        : formData,
+		  contentType     : false,
+      method          : "POST",
+		  contentType     : false,
+		  cache           : false,
+		  processData     : false , success : function(r) { 
+
+        if(r == '200') { 
+          alert("수정되었습니다.");
+              location.replace('/');
+              return true;
+            } else {
+              alert("오류발생.");
+              return false;
+            }
+        }
+        , complete : function()
+        {
+            
+        }
+      }); //ajax end
+
+    });
+    
   });
 
 </script>

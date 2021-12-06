@@ -25,7 +25,19 @@
                 <th>제목</th>
                 <td><input type="text" name="title" value="" id="title"  style="width:980px;"></td>
             </tr> 
-
+            <tr>
+                <th>공지여부</th>
+                <td style="text-align:start;">
+                  <label class="hmis">
+                  <input type="radio" name="notice" value="Y" class="hmis validate" >
+                  <span class="lbl">사용</span>
+                  </label>
+                  <label class="hmis">
+                  <input type="radio" name="notice" value="N" class="hmis validate" checked>
+                  <span class="lbl">미사용</span>
+                  </label>
+                </td>
+            </tr> 
             <tr>
                 <th>파일</th>
                 <td><input type="file" name="upload_file" value="" id="upload_file"  style="width:980px;"></td>
@@ -79,13 +91,13 @@ $("#write_form").on("submit" , function(e) {
 		
 		e.preventDefault();	
 
-        let name			= $('input[name=name]').val();
-        let title			= $('input[name=title]').val();
+        let name			    = $('input[name=name]').val();
+        let title			    = $('input[name=title]').val();
         let upload_file		= $('input[name=upload_file]')[0].files[0];
-        let content			= $('#summernote').val();
+        let content			  = $('#summernote').val();
 
-        let arr				= [name, title, content];
-        let arr2			= ['이름', '제목', '내용'];
+        let arr				    = [name, title, content];
+        let arr2			    = ['이름', '제목', '내용'];
 
         for(i=0; i<=arr.length; i++)
         {
@@ -95,32 +107,30 @@ $("#write_form").on("submit" , function(e) {
             return false;
           }
         }
-		
-		console.log("file : " + upload_file);
-		let formData = new FormData();
-		formData.append("name", $('input[name=name]').val());
-		formData.append("title", title);
-		formData.append("content", $('#summernote').val());
-		formData.append("upload_file", upload_file);
 
+		let formData = new FormData();
+		formData.append("name",         name);
+		formData.append("title",        title);
+		formData.append("content",      $('#summernote').val());
+		formData.append("upload_file",  upload_file);
+//formData.append("notice",       notice);
+    
+    $("input[name=notice]:checked").each(function() {
+        formData.append("notice",    $(this).val());
+    });
 
 		$.ajax({
           url      : "/index.php/write/save",
-          //contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+    
+		  data		        : formData,
+		  contentType     : false,
+      method          : "POST",
+		  contentType     : false,
+		  cache           : false,
+		  processData     : false , success : function(r) { 
 
-		/*
-		  data     : { "name"			: name, 
-                       "title"			: title,
-                       "content"		: content,
-                      },
-		*/
-		//data		: JSON.stringify(formData),
-		data		: formData,
-		contentType : false,
-          method   : "POST",
-		  contentType : false,
-		  cache : false,
-		  processData : false , success : function(r) { if(r == '200') { alert("저장되었습니다.");
+        if(r == '200') { 
+          alert("저장되었습니다.");
               location.replace('/');
               return true;
             } else {

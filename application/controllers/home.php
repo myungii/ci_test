@@ -52,7 +52,7 @@ class Home extends CI_Controller {
 
 
 		//표시되는 페이지 수
-		$rowsPage 			= 3;
+		$rowsPage 			= 10;
 
 		$total 				= $this->board_model->getTotal($searchText);
 		$totalPage 			= $this->board_model->totalPage($total, $rowsPage);

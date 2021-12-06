@@ -30,7 +30,7 @@ class Content extends CI_Controller {
 		$this->left = 'left3' ;
 
 		$this->param = $this->input->post(NULL, true);
-        $this->temps_code_list = $this->config->item( 'temps_code' ); //
+        $this->temps_code_list = $this->config->item( 'temps_code' ); 
 		
 
 	}
@@ -39,10 +39,13 @@ class Content extends CI_Controller {
 	{
 
         $id = $this->input->get('id');
-        $data['content'] = $this->Board_model->load($id);
+        $data['content'] 	= $this->Board_model->load($id);
+		$data['fileInfo']	= $this->Board_model->fileLoad($id);
 
-		$this->load->view('content', $data);
-		$this->load->view('reply');
+		$reply['pid'] 		= $id;
+
+		$this->load->view('content', 	$data);
+		$this->load->view('reply', 		$reply);
 	}
 
 

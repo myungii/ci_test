@@ -47,32 +47,58 @@ class Edit extends CI_Controller {
 	function save()
 	{
 		//저장
-        $data['idx'] 		= $this->input->post('id');
+		$data['idx'] 		= $this->input->post('id');
 		$data['name'] 		= $this->input->post('name');
 		$data['title'] 		= $this->input->post('title');
 		$data['content'] 	= $this->input->post('editordata');
-	
 
-		if($data['title'])
+		$result = $this->Board_model->modify($data);
+		$getId  = $data['idx'];
+
+
+		//파일 업로드 및 저장
+		$config['upload_path'] 		= './uploads';
+		$config['allowed_types']	= 'gif|jpg|png';
+		$config['max_size']			= '0';
+		$config['max_width']		= '0';
+		$config['max_height']		= '0';
+
+		$this->load->library('upload', $config);
+
+		if(!$this->upload->do_upload('upload_file'))
 		{
-			$response = $this->Board_model->modify($data);
+			$error = array('error' => $this->upload->display_errors());
+			
+			var_dump($error);
+			exit;
+		}
+		else{
+			$fileInfo =  $this->upload->data();
+			
 
-			if($response == true)
-			{
-				echo '<script>
-						alert("수정되었습니다.");
-						location.replace("/");
-					</script>';
-			} else {
-				echo '<script>
-						alert("잠시 후 다시 시도해주세요.");
-					</script>';
-			}
-		} 
-				echo '<script>
-						alert("제목을 입력해주세요.");
-						window.history.back();		
-					</script>';
+			$fileData = array(
+								'idx'			=> $data['idx'],
+								'boardId' 		=> $getId,
+								'fileName' 		=> $fileInfo['file_name'],
+								'fileSize'		=> intval($fileInfo['file_size']),
+								'filePath'		=> $fileInfo['file_path'],
+								'fileType'		=> $fileInfo['file_type'],
+								'regdate'		=> date("Y-m-d H:i:s"),
+								'fullFilePath'	=> $fileInfo['full_path']
+						);
+			
+			$this->Board_model->fileModify($fileData);
+			
+		}
+
+		if($result == '1')
+		{
+			echo "200";
+			exit;
+		}
+		else {
+			echo "99";
+		}
 		
 	}
 
