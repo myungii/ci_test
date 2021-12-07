@@ -55,9 +55,8 @@ class Edit extends CI_Controller {
 		$data['title'] 		= $this->input->post('title');
 		$data['notice'] 	= $this->input->post('notice');
 		$data['content'] 	= $this->input->post('content');
-		$data['upload_file']= $this->input->post('upload_file');
+		$upload_file        = $this->input->post('upload_file');
 
-		$fid =  isset($_GET['fid']) ? trim($_GET['fid']) : 0;
 
 		if($data['notice'] == 'Y')
 		{
@@ -66,7 +65,10 @@ class Edit extends CI_Controller {
 			$data['notice'] = 0;
 		}
 
-		$result = $this->Board_model->modify($data);
+		
+
+		$result = $this->Board_model->add($data);
+
 
 
 		//파일 업로드 및 저장
@@ -78,12 +80,19 @@ class Edit extends CI_Controller {
 
 		$this->load->library('upload', $config);
 
-		if($fid > 0) {
+		if($upload_file) {
+
+			//기존 파일 삭제
+			$oldFile = $this->Board_model->fileLoad($data['idx']);
+			$oldFileId = $oldFile->idx;
+
+			$oldDel = $this->Board_model->fileDelete($oldFileId);
+
+
 
 			$fileInfo =  $this->upload->data();
 			
 			$fileData = array(
-								'idx'			=> $fid,
 								'boardId' 		=> $data['idx'],
 								'fileName' 		=> $fileInfo['file_name'],
 								'fileSize'		=> intval($fileInfo['file_size']),
@@ -93,7 +102,7 @@ class Edit extends CI_Controller {
 						);
 			
 
-			$this->Board_model->fileModify($fileData);
+			$this->Board_model->fileUpload($fileData);
 			
 		}
 		

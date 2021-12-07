@@ -74,15 +74,15 @@ class Board_model extends CI_Model {
         
         if($data <= 0)
         {
-            return false;
-        }
+            $is_valid = '0';
+        } else {
 
-        $this->db->insert('board_file', $data);
+			$this->db->insert('board_file', $data);
+			$is_valid = '1';
+		}
+
+		$this->_call_json($is_valid);
         
-        if($this->db->affected_rows())
-        {
-            return true;
-        }
     }
 
 
@@ -121,6 +121,7 @@ class Board_model extends CI_Model {
         
     }
 
+	//파일 한 건 출력
     function fileLoad($boardId) {
 
         if(!$boardId) {
@@ -134,6 +135,25 @@ class Board_model extends CI_Model {
         
     }
 
+    //파일 삭제
+    function fileDelete($idx) {
+        if($idx)
+        {
+            $this->db->where('idx', $idx);
+            $this->db->delete('board_file');
+
+            if($this->db->affected_rows() > 0)
+            {
+                return true;
+            } 
+            
+        }
+
+        return false;
+	}
+
+
+
     //파일수정
     function fileModify($data = array()) {
 
@@ -146,7 +166,7 @@ class Board_model extends CI_Model {
 print_r($data);
         if(!$data['idx'])
         {
-			$id_valid = "0";
+			$id_valid = '0';
         } else {
 
             $dataArr['fileName']            = $data['fileName'];
@@ -157,7 +177,7 @@ print_r($data);
             $dataArr['fullFilePath']        = $data['fullFilePath'];
 
             $result = $this->db->update('board_file', $dataArr, $where);
-			$is_valid = "1";
+			$is_valid = '1';
 
         }
 		$this->_call_jason($is_valid);
