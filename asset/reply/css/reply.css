@@ -1,52 +1,46 @@
-#form-commentInfo{ 
-    width: 100%; 
-    
-} 
 
-#comment-count{ 
-     margin-top: 40em;
-     
-} 
+#comments-area{
+     margin-left: -30px;
+     padding-left: 50px;
+     width: 1000px;
+}
+
+#comment-list{
+     font-size: 20px;
+     font-weight: bold;
+     margin-top : 2em;
+     margin-bottom : 1em;
+     padding-bottom: 1em;
+     border-bottom: solid 1px gray;
+}
+
 
 #comment-input{
-     width: 50%; height: 3.3em; 
+   width: 800px;
 } 
 
-#comment-name{
-     height: 40px; 
+.comment-name{
+     font-weight: bold;
+     font-size: 13px;
+     
 }
 
 #submit{
-     width: 5em; 
-     height: 2.3em; 
-     font-size: 15px; 
+     width: 4em; 
+     height: 1.em; 
+     font-size: 17px; 
      font-weight: bold; 
      color: aliceblue; 
 } 
 
-#voteUp, #voteDown{
-     width: 3.5em; 
-     height: 1.9em; 
-     background-color: aqua; 
-} 
 
-#comments{
-     margin-top: -41.7em; 
-}
 
 .eachComment{
-     width :50%; 
-     margin: 10px; 
-     padding: 0.5em; 
-     border-bottom: 1px solid #c1bcba; 
-} 
-
-.eachComment .name{
-     font-size: 1.5em; 
-     font-weight: bold; 
+     font-size: 1.2em; 
      margin-bottom: 0.3em; 
      display: flex; 
-     justify-content: space-between; 
+     color: slategrey;
+
 } 
 
 .eachComment .inputValue{
@@ -54,21 +48,22 @@
      font-style: italic; 
 } 
 
-.eachComment .time{
+.time{
      font-size: 0.7em; 
-     color: #c1bcba; 
+     color: #858483; 
      font-style: oblique; 
      margin-top: 0.5em; 
      margin-bottom: 0.5em; 
 } 
 
-.eachComment .voteDiv{
-     display: flex; 
-     justify-content: flex-end; 
-} 
 
 .eachComment .deleteComment{
      background-color: red; 
      color: aliceblue; 
+}
+
+.comment-menu{
+     border-bottom: solid 1px gray;
+     margin-bottom: 1em;
 }
 

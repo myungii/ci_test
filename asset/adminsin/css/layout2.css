@@ -2,7 +2,7 @@
 .input_text {border:1px solid #cccccc;}
 .input_text_all {border:1px solid #f7f7f7; background:#f7f7f7;}
 
-#Contents {float: left;padding-top:20px;}
+#Contents {float: left;}
 
 	#Contents .boardUp {padding-left:10px; margin-bottom:10px; _margin-bottom:5px;}
 	#Contents .boardUp .search_bbs {float:right;}

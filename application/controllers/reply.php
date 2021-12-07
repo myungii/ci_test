@@ -78,6 +78,36 @@ print_r($data);
 
 	}
 
+	public function delete()
+	{
+		$idx = $this->input->get('replyId');
+
+		print_r($idx);
+		$result = $this->Reply_model->delete($idx);
+		
+		if($result == true)
+		{
+			echo "200";
+			exit;
+		}
+		else {
+			echo "99";
+		}
+	}
+
+	public function modify()
+	{
+		$data['idx'] 		= $this->input->get('replyId');
+		$data['name'] 		= $this->input->get('name');
+		$data['content'] 	= $this->input->get('content');
+		$data['date'] 		= date("Y-m-d H:i:s");
+
+
+		$result = $this->Reply_model->modify($data);
+		
+
+	}
+
 
 }
 

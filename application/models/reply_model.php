@@ -52,31 +52,51 @@ class Reply_model extends CI_Model {
 
     //삭제
     function delete($idx) {
+   
         if($idx)
         {
             $this->db->where('idx', $idx);
             $this->db->delete('reply');
 
-            if($this->db->affected_rows() > 0)
-            {
-                return true;
-            } 
-            
-        }
+            $is_valid = '1';
 
-        return false;
+        } else {
+            $is_valid = '0';
+        }
+        
+        $this->_call_json($is_valid);
+
 	}
 
  
     
 
     //수정
-    function modify() {
+    function modify($data) {
 
- 
+        $dataArr    = array();
+        $where      = array (
+                                "idx" => $data['idx']
+                            );
 
-        return '';
+        if($data['idx'])
+        {
+            $dataArr['name']         = $data['name'];
+            $dataArr['content']      = $data['content'];
+            $dataArr['regdate']      = date("Y-m-d H:i:s");
+
+            $this->db->update('reply', $dataArr, $where);
+
+            $is_valid = '1';
+        } else {
+            $is_valid = '0';
+        }
+
+
+        $this->_call_json($is_valid);
+
     }
+
 
     //등록일 포맷 변경
     static function setRegdate()
@@ -101,6 +121,14 @@ class Reply_model extends CI_Model {
 		
         
         return $this->db->query($query)->row('cnt');
+    }
+
+    private function _call_json($is_valid) {
+        $json               = null;
+        $json['is_valid']   = $is_valid;
+
+
+        echo json_encode($json);
     }
 
 

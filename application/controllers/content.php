@@ -43,13 +43,14 @@ class Content extends CI_Controller {
         $data['content'] 	= $this->Board_model->load($id);
 		$data['fileInfo']	= $this->Board_model->fileLoad($id);
 
-		$reply['pid'] 		= $id;
-		$reply['reply']		= $this->Reply_model->get_view($id);
-		$reply['total']		= $this->Reply_model->getTotal($id);
+		$data['pid'] 		= $id;
+		$data['reply']		= $this->Reply_model->get_view($id);
+		$data['total']		= $this->Reply_model->getTotal($id);
 
 
 		$this->load->view('content', 	$data);
-		$this->load->view('reply', 		$reply);
+		
+		
 	}
 
 

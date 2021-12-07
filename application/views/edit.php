@@ -29,8 +29,21 @@
                 <td><input type="text" name="title" value="<?= $load->title ?>" id="title"  style="width:980px;"></td>
             </tr> 
             <tr>
+                <th>공지여부</th>
+                <td style="text-align:start;">
+                  <label class="hmis">
+                  <input type="radio" name="notice" value="Y" class="hmis validate" <?php ($load->notice == '1') ? "checked" : "" ?> >
+                  <span class="lbl">사용 <?=$load->notice ?> </span>
+                  </label>
+                  <label class="hmis">
+                  <input type="radio" name="notice" value="N" class="hmis validate" <?php ($load->notice == '0') ? "checked" : "" ?> >
+                  <span class="lbl">미사용</span>
+                  </label>
+                </td>
+            </tr> 
+            <tr>
                 <th>파일</th>
-                <td><input type="file" name="upload_file" value="" id="upload_file"  style="width:980px;"></td>
+                <td><input type="file" name="upload_file" value="<?php empty($file) ? 0 : $file->idx ?>" id="upload_file"  style="width:980px;"></td>
             </tr> 
 
             </tbody>

@@ -39,7 +39,13 @@ class Edit extends CI_Controller {
 	{
 
         $id = $_GET['id'];
-        $data['load'] = $this->Board_model->load($id);
+		$fid =  isset($_GET['fid']) ? trim($_GET['fid']) : 0;
+
+        $data['load'] 	= $this->Board_model->load($id);
+		if($fid > 0)
+		{
+			$data['file'] 	= $this->Board_model->fileLoad($id);
+		}
 
 		$this->load->view('edit', $data);
 	}
@@ -50,10 +56,20 @@ class Edit extends CI_Controller {
 		$data['idx'] 		= $this->input->post('id');
 		$data['name'] 		= $this->input->post('name');
 		$data['title'] 		= $this->input->post('title');
-		$data['content'] 	= $this->input->post('editordata');
+		$data['notice'] 	= $this->input->post('notice');
+		$data['content'] 	= $this->input->post('content');
+		$data['upload_file']= $this->input->post('upload_file');
+
+		$fid =  isset($_GET['fid']) ? trim($_GET['fid']) : 0;
+
+		if($data['notice'] == 'Y')
+		{
+			$data['notice'] = 1;
+		} else {
+			$data['notice'] = 0;
+		}
 
 		$result = $this->Board_model->modify($data);
-		$getId  = $data['idx'];
 
 
 		//파일 업로드 및 저장
@@ -65,39 +81,23 @@ class Edit extends CI_Controller {
 
 		$this->load->library('upload', $config);
 
-		if(!$this->upload->do_upload('upload_file'))
-		{
-			$error = array('error' => $this->upload->display_errors());
-			
-			var_dump($error);
-			exit;
-		}
-		else{
+		if($fid > 0) {
+
 			$fileInfo =  $this->upload->data();
 			
-
 			$fileData = array(
-								'idx'			=> $data['idx'],
-								'boardId' 		=> $getId,
+								'idx'			=> $fid,
+								'boardId' 		=> $data['idx'],
 								'fileName' 		=> $fileInfo['file_name'],
 								'fileSize'		=> intval($fileInfo['file_size']),
 								'filePath'		=> $fileInfo['file_path'],
 								'fileType'		=> $fileInfo['file_type'],
-								'regdate'		=> date("Y-m-d H:i:s"),
 								'fullFilePath'	=> $fileInfo['full_path']
 						);
 			
+
 			$this->Board_model->fileModify($fileData);
 			
-		}
-
-		if($result == '1')
-		{
-			echo "200";
-			exit;
-		}
-		else {
-			echo "99";
 		}
 		
 	}

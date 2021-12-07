@@ -53,25 +53,36 @@ class Board_model extends CI_Model {
 */
     //추가
     function add($data = array()) {
-        if($data > 0)
+        if($data <= 0)
        {
-            $data['regdate']    = date("Y-m-d H:i:s");
+            return false;
+       }
 
-            $this->db->insert('board', $data);
+        $data['regdate']    = date("Y-m-d H:i:s");
+
+        $this->db->insert('board', $data);
+
+        if($this->db->affected_rows())
+        {
             return true;
-        } 
-
-      return false;
+        }
+        
 	}
 
     //파일 업로드
     function fileUpload($data) {
-        if($data < 0)
+        
+        if($data <= 0)
         {
             return false;
         }
+
         $this->db->insert('board_file', $data);
-        return true;
+        
+        if($this->db->affected_rows())
+        {
+            return true;
+        }
     }
 
 
@@ -128,12 +139,14 @@ class Board_model extends CI_Model {
 
         $dataArr    = array();
         $where      = array (
-                        "idx"       => $data['idx'],
-                        "baordId"   => $data['boardId']
+                        "idx"       => $data['idx']
                     );
 
-        if($data['idx'] > 0 )
+        if(!$data['idx'])
         {
+            return false;
+        } else {
+
             $dataArr['fileName']            = $data['fileName'];
             $dataArr['fileSize']            = $data['fileSize'];
             $dataArr['filePath']            = $data['filePath'];
@@ -141,15 +154,17 @@ class Board_model extends CI_Model {
             $dataArr['regdate']             = date("Y-m-d H:i:s");
             $dataArr['fullFilePath']        = $data['fullFilePath'];
 
-            $this->db->update('board_file', $dataArr, $where);
+            $result = $this->db->update('board_file', $dataArr, $where);
 
-            if($this->db->affected_rows() > 0)
-            {
-                return true;
-            } 
         }
 
-        return false;
+        if($result == true)
+        {
+            return true;
+        } else {
+            return false;
+        }
+
     }
     
 
@@ -181,8 +196,10 @@ class Board_model extends CI_Model {
                         "idx" => $data['idx']
                     );
 
-        if($data['idx'] > 0 )
+        if(!$data['idx'])
         {
+            return false;
+        }
             $dataArr['name']         = $data['name'];
             $dataArr['title']        = $data['name'];
             $dataArr['content']      = $data['content'];
@@ -194,9 +211,7 @@ class Board_model extends CI_Model {
             {
                 return true;
             } 
-        }
-
-        return false;
+    
     }
 
     //등록일 포맷 변경
@@ -204,7 +219,7 @@ class Board_model extends CI_Model {
     {
         if(!$date)
         {
-            return false;
+            return "";
         }
 
         return date("Y-m-d", strtotime($date));
@@ -357,5 +372,14 @@ class Board_model extends CI_Model {
         );
 
     } 
+
+
+    private function _call_json($is_valid) {
+        $json               = null;
+        $json['is_valid']   = $is_valid;
+
+
+        echo json_encode($json);
+    }
 
 }

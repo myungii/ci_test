@@ -47,11 +47,20 @@ class Write extends CI_Controller {
 		$name		= $this->input->post('name');
 		$title		= $this->input->post('title');
 		$content	= $this->input->post('content');
+		$notice		= $this->input->post('notice');
+
+		if($notice == 'Y')
+		{
+			$notice = 1;
+		} else {
+			$notice = 0;
+		}
 
 		$data = array(
 					'name' 		=> $name,
 					'title' 	=> $title,
-					'content' 	=> $content
+					'content' 	=> $content,
+					'notice' 	=> $notice
 			);
 		$result = $this->Board_model->add($data);
 		$lastId = (int)$this->db->insert_id();
@@ -64,20 +73,12 @@ class Write extends CI_Controller {
 		$config['max_width']		= '0';
 		$config['max_height']		= '0';
 
+
 		$this->load->library('upload', $config);
 
-		if(!$this->upload->do_upload('upload_file'))
-		{
-			$error = array('error' => $this->upload->display_errors());
-			
-			var_dump($error);
-			exit;
-		}
-		else{
-			$fileInfo =  $this->upload->data();
 
-			//print_r($fileInfo);
-			
+		if($this->upload->do_upload('upload_file') == true) {
+			$fileInfo =  $this->upload->data();
 
 			$fileData = array(
 								'boardId' 		=> $lastId,
@@ -91,8 +92,14 @@ class Write extends CI_Controller {
 			
 			$this->Board_model->fileUpload($fileData);
 			
+		} 
+		
+		/*
+		else {
+			$error = array('error' => $this->upload->display_errors());		
+			var_dump($error);
 		}
-
+		*/
 
 		//파일 업로드			
 		
@@ -111,7 +118,7 @@ class Write extends CI_Controller {
 		move_uploaded_file($_FILES['upload_file']['tmp_name'], "$targetDir/$targetFile");
 		*/
 		
-		if($result == '1')
+		if($result == true)
 		{
 			echo "200";
 			exit;
