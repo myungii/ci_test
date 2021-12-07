@@ -52,7 +52,7 @@
         
         <div class="area-button">
             <button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href='/';">목록</button>
-            <button type="button" class="btn btn-lg btn-theme" onclick="location.replace('/index.php/edit/?id=<?=$content->idx?>&fid=<?php empty($fileInfo) ? 0 : $fileInfo->idx ?>')">수정</button>
+            <button type="button" class="btn btn-lg btn-theme" onclick="location.replace('/index.php/edit/?id=<?=$content->idx?>')">수정</button>
             <button type="button" class="btn btn-lg" onclick="location.replace('/index.php/delete?id=<?=$content->idx?>')">삭제</button>
         </div>
 

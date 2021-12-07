@@ -39,13 +39,10 @@ class Edit extends CI_Controller {
 	{
 
         $id = $_GET['id'];
-		$fid =  isset($_GET['fid']) ? trim($_GET['fid']) : 0;
 
         $data['load'] 	= $this->Board_model->load($id);
-		if($fid > 0)
-		{
-			$data['file'] 	= $this->Board_model->fileLoad($id);
-		}
+
+		$data['file'] 	= $this->Board_model->fileLoad($id);
 
 		$this->load->view('edit', $data);
 	}

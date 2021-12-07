@@ -82,17 +82,8 @@ print_r($data);
 	{
 		$idx = $this->input->get('replyId');
 
-		print_r($idx);
 		$result = $this->Reply_model->delete($idx);
 		
-		if($result == true)
-		{
-			echo "200";
-			exit;
-		}
-		else {
-			echo "99";
-		}
 	}
 
 	public function modify()

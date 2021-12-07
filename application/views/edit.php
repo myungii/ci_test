@@ -32,11 +32,11 @@
                 <th>공지여부</th>
                 <td style="text-align:start;">
                   <label class="hmis">
-                  <input type="radio" name="notice" value="Y" class="hmis validate" <?php ($load->notice == '1') ? "checked" : "" ?> >
+                  <input type="radio" name="notice" value="Y" class="hmis validate" <?php if($load->notice == 1) echo "checked" ?> >
                   <span class="lbl">사용 <?=$load->notice ?> </span>
                   </label>
                   <label class="hmis">
-                  <input type="radio" name="notice" value="N" class="hmis validate" <?php ($load->notice == '0') ? "checked" : "" ?> >
+                  <input type="radio" name="notice" value="N" class="hmis validate" <?php if($load->notice == 0) echo "checked" ?> >
                   <span class="lbl">미사용</span>
                   </label>
                 </td>
@@ -126,25 +126,22 @@ $(document).ready(function () {
 		$.ajax({
           url      : "/index.php/edit/save",
     
-		  data		        : formData,
-		  contentType     : false,
-      method          : "POST",
+		  data 	        : formData,
+		  type            : "POST",
 		  contentType     : false,
 		  cache           : false,
-		  processData     : false , success : function(r) { 
+		  processData     : false , 
+		  success : function(r) { 
 
-        if(r == '200') { 
-          alert("수정되었습니다.");
-              location.replace('/');
-              return true;
-            } else {
-              alert("오류발생.");
-              return false;
-            }
-        }
-        , complete : function()
-        {
-            
+		 const obj = $.parseJSON(r);
+		 console.log("obj : " + obj);
+			if(obj.is_valid == "1") {
+
+				  alert("수정되었습니다.");
+				  location.replace('/');
+			} else {
+			      alert("오류발생.");
+			}
         }
       }); //ajax end
 

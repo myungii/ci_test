@@ -124,7 +124,7 @@ class Board_model extends CI_Model {
     function fileLoad($boardId) {
 
         if(!$boardId) {
-            return false;
+            return "";
         }
 
         $query      = "SELECT * FROM board_file WHERE boardId = ". $boardId;
@@ -137,14 +137,16 @@ class Board_model extends CI_Model {
     //파일수정
     function fileModify($data = array()) {
 
+
         $dataArr    = array();
         $where      = array (
                         "idx"       => $data['idx']
                     );
 
+print_r($data);
         if(!$data['idx'])
         {
-            return false;
+			$id_valid = "0";
         } else {
 
             $dataArr['fileName']            = $data['fileName'];
@@ -155,15 +157,10 @@ class Board_model extends CI_Model {
             $dataArr['fullFilePath']        = $data['fullFilePath'];
 
             $result = $this->db->update('board_file', $dataArr, $where);
+			$is_valid = "1";
 
         }
-
-        if($result == true)
-        {
-            return true;
-        } else {
-            return false;
-        }
+		$this->_call_jason($is_valid);
 
     }
     
@@ -378,6 +375,7 @@ class Board_model extends CI_Model {
         $json               = null;
         $json['is_valid']   = $is_valid;
 
+print_r("jason model : " . $json);
 
         echo json_encode($json);
     }
