@@ -90,7 +90,7 @@
 
 $(document).ready(function() {
 var test = {
-                data : 100
+                "data" : "100"
             };
 
 
@@ -100,7 +100,7 @@ var test = {
             type : 'POST',
             data : test,
             success: function (r) {
-                if(r == 100)
+                if(r == "100")
                 {
                     console.log("성공! : "+ r);
                 } else {

@@ -46,6 +46,7 @@ class Home extends CI_Controller {
 	{
 		$aa = $this->input->post('data');
 		
+		var_dump($aa); 
 		echo $aa;
 	
 		$boardList 	= $this->board_model->get_view(1, 5, ""); //리스트 출력
