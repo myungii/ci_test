@@ -123,11 +123,11 @@ $("#write_form").on("submit" , function(e) {
           url      : "/index.php/write/save",
     
 		  data		        : formData,
-		  contentType     : false,
       method          : "POST",
 		  contentType     : false,
 		  cache           : false,
-		  processData     : false , success : function(r) { 
+		  processData     : false , 
+      success : function(r) { 
 
         if(r == '200') { 
           alert("저장되었습니다.");

@@ -1,4 +1,5 @@
 const pid       = $("#comment-pid").val();
+const rid       = $("#reply-id").val();
 const inputBar  = document.querySelector("#comment-input"); 
 const inputName = document.querySelector("#comment-name"); 
 const rootDiv   = document.querySelector("#comments"); 
@@ -66,11 +67,10 @@ function showComment(currentVal, nameVal, pid) {
              inputBar.value =''; 
         } 
     } 
-
+ 
 
     //수정버튼
-    $("#comment-edit").on("click", function(e) {
-        e.preventDefault(); 
+    $("#comment-edit-"+rid).on("click", function() {
 
         if($('#editSubmit').css("display") == "none")
         {
@@ -79,7 +79,8 @@ function showComment(currentVal, nameVal, pid) {
         } 
         
 
-        const replyId   = document.querySelector("#reply-id"); 
+        const replyId       = document.querySelector("#reply-id"); 
+        
         const name      = document.getElementById('reply-name').innerText;
         const content   =  document.getElementById('reply-content').innerHTML;
 
@@ -87,7 +88,6 @@ function showComment(currentVal, nameVal, pid) {
         $("input[name=comment-name]").attr('value', name);
         $("input[name=comment-input]").attr('value', content);
 
-        
             $("#editSubmit").on("click", function() {
 
                 const name_form     = $("input[name=comment-name]").val();

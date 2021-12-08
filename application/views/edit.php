@@ -6,7 +6,7 @@
     <!-- Contents -->
     <div id="Contents" style="width:1400px; padding-left:20em;">
 
-    <form id="edit_form" method="post" action="/index.php/edit/save">
+    <form id="edit_form" method="post" >
     <input type="hidden" name="id" value="<?= $load->idx ?>">
         <table class="table table-bordered table-list">
             <colgroup>
@@ -33,7 +33,7 @@
                 <td style="text-align:start;">
                   <label class="hmis">
                   <input type="radio" name="notice" value="Y" class="hmis validate" <?php if($load->notice == 1) echo "checked" ?> >
-                  <span class="lbl">사용 <?=$load->notice ?> </span>
+                  <span class="lbl">사용 </span>
                   </label>
                   <label class="hmis">
                   <input type="radio" name="notice" value="N" class="hmis validate" <?php if($load->notice == 0) echo "checked" ?> >
@@ -43,17 +43,21 @@
             </tr> 
             <tr>
                 <th>파일</th>
-                <td><input type="file" name="upload_file" value="<?php empty($file) ? 0 : $file->idx ?>" id="upload_file"  style="width:980px;"></td>
+                <td>
+                  <input type="file" name="upload_file" value="<?= $fileInfo ?>" id="upload_file" style="float:left;" >
+                  <input type="text" id="upload_file_for" value="<?= $fileName ?>" style="margin-left:-11.5em; float:left;" disabled="disabled">
+                  <input type="hidden" name="old_file" value="<?= $fileInfo ?>" >
+              </td>
             </tr> 
 
             </tbody>
 
         </table>  <br>
 
-         <textarea id="summernote" name="editordata"><?= $load->content ?></textarea>
+         <textarea id="summernote" name="content"><?= $load->content ?></textarea>
                
          <div class="area-button">
-            <button type="submit" name="save" class="btn btn-lg btn-theme" onclick="">수정</button>
+            <button type="button" name="editBtn" id="editBtn" class="btn btn-lg btn-theme" onclick="">수정</button>
             <button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href='/';">목록</button>
         </div>
 
@@ -63,8 +67,11 @@
 </div>
 
 <script type="text/javascript">
-
+        
 $(document).ready(function () {
+
+  $("#upload_file_for").hide();
+  
     $('#summernote').summernote({
       height: 500,
       width: 1120,              
@@ -90,63 +97,72 @@ $(document).ready(function () {
         '50', '72']
     });
 
+    $("#editBtn").on("click", function() {
 
-    $("#edit_form").on("submit" , function(e) { 
-	//$(document).on("click", "button[name='save']" , function(e) { 
-		
-		e.preventDefault();	
+          //$(document).on("click", "button[name='save']" , function(e) { 
+              let board_id      = $('input[name=id').val();
+              let name			    = $('input[name=name]').val();
+              let title			    = $('input[name=title]').val();
+              let upload_file		= $('input[name=upload_file]')[0].files[0];
+              let content			  = $('#summernote').val();
 
-        let name			    = $('input[name=name]').val();
-        let title			    = $('input[name=title]').val();
-        let upload_file		= $('input[name=upload_file]')[0].files[0];
-        let content			  = $('#summernote').val();
+              let arr				    = [name, title, content];
+              let arr2			    = ['이름', '제목', '내용'];
 
-        let arr				    = [name, title, content];
-        let arr2			    = ['이름', '제목', '내용'];
+              for(i=0; i<=arr.length; i++)
+              {
+                if(arr[i] == '')
+                {
+                  alert(arr2[i] + '을(를) 입력해주세요.');
+                  return false;
+                }
+              }
 
-        for(i=0; i<=arr.length; i++)
-        {
-          if(arr[i] == '')
-          {
-            alert(arr2[i] + '을(를) 입력해주세요.');
-            return false;
-          }
-        }
 
-		let formData = new FormData();
-		formData.append("name",         name);
-		formData.append("title",        title);
-		formData.append("content",      $('#summernote').val());
-		formData.append("upload_file",  upload_file);
-    
-    $("input[name=notice]:checked").each(function() {
-        formData.append("notice",    $(this).val());
+          let formData = new FormData();
+          formData.append("id",         board_id);
+          formData.append("name",         name);
+          formData.append("title",        title);
+          formData.append("content",      $('#summernote').val());
+          formData.append("upload_file",  upload_file);
+
+          $("input[name=notice]:checked").each(function() {
+              formData.append("notice",    $(this).val());
+          });
+
+          $.ajax({
+                url      : "/index.php/edit/save",
+
+                data 	          : formData,
+                method          : "POST",
+                contentType     : false,
+		            cache           : false,
+		            processData     : false , 
+                
+                success : function(r) { 
+        
+                if(r != '') {
+
+                    alert("수정되었습니다.");
+                    location.replace('/index.php?id=' + board_id);
+                } else {
+                  
+                      alert("오류발생.");
+                }
+              }
+            }); //ajax end
+
+
     });
 
-		$.ajax({
-          url      : "/index.php/edit/save",
-    
-		  data 	        : formData,
-		  type            : "POST",
-		  contentType     : false,
-		  cache           : false,
-		  processData     : false , 
-		  success : function(r) { 
 
-		 const obj = $.parseJSON(r);
-		 console.log("obj : " + obj);
-			if(obj.is_valid == "1") {
 
-				  alert("수정되었습니다.");
-				  location.replace('/');
-			} else {
-			      alert("오류발생.");
-			}
-        }
-      }); //ajax end
 
-    });
-    
+
+
   });
+
+
+
 
 </script>

@@ -38,7 +38,7 @@
 |
 */
 $route['default_controller'] = "home";
-$route['reply'] = "reply";
+$route['ajax'] = "boardAjax/home";
 $route['404_override'] = '/';
 
 

@@ -72,16 +72,16 @@ class Board_model extends CI_Model {
     //파일 업로드
     function fileUpload($data) {
         
-        if($data <= 0)
+        if(!$data)
         {
-            $is_valid = '0';
+            return false;
         } else {
 
-			$this->db->insert('board_file', $data);
-			$is_valid = '1';
-		}
+            $data['regdate']    = date("Y-m-d H:i:s");
 
-		$this->_call_json($is_valid);
+			$this->db->insert('board_file', $data);
+			return true;
+		}
         
     }
 
@@ -163,7 +163,6 @@ class Board_model extends CI_Model {
                         "idx"       => $data['idx']
                     );
 
-print_r($data);
         if(!$data['idx'])
         {
 			$id_valid = '0';
@@ -211,23 +210,16 @@ print_r($data);
         $dataArr    = array();
         $where      = array (
                         "idx" => $data['idx']
-                    );
+        );
 
-        if(!$data['idx'])
-        {
-            return false;
-        }
             $dataArr['name']         = $data['name'];
-            $dataArr['title']        = $data['name'];
+            $dataArr['title']        = $data['title'];
             $dataArr['content']      = $data['content'];
+            $dataArr['notice']       = $data['notice'];
             $dataArr['regdate']      = date("Y-m-d H:i:s");
 
-            $this->db->update('board', $dataArr, $where);
-
-            if($this->db->affected_rows() > 0)
-            {
-                return true;
-            } 
+           if($this->db->update('board', $dataArr, $where)) return TRUE ;
+           return FALSE;
     
     }
 
@@ -304,7 +296,7 @@ print_r($data);
         }
 
 
-        $Info = $this->_pageList($totalcnt, $rowsPage, $curPage, 10);
+        $Info = $this->_pageList($totalcnt, $rowsPage, $curPage, 5);
         
         $result = array();
         if ($Info['current_block'] > 2) {
@@ -394,8 +386,6 @@ print_r($data);
     private function _call_json($is_valid) {
         $json               = null;
         $json['is_valid']   = $is_valid;
-
-print_r("jason model : " . $json);
 
         echo json_encode($json);
     }

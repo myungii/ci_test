@@ -41,7 +41,19 @@ class Content extends CI_Controller {
 
         $id = $this->input->get('id');
         $data['content'] 	= $this->Board_model->load($id);
-		$data['fileInfo']	= $this->Board_model->fileLoad($id);
+
+		if($this->Board_model->fileLoad($id)) {
+			$fileInfo = $this->Board_model->fileLoad($id);
+			
+			$data['file_name']	= $fileInfo->fileName;
+			$data['file_idx']	= $fileInfo->idx;
+			
+		} else {
+			$data['file_name'] = '';
+			$data['file_idx']  = '';
+		}
+
+		
 
 		$data['pid'] 		= $id;
 		$data['reply']		= $this->Reply_model->get_view($id);

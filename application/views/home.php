@@ -76,7 +76,7 @@
                         <tr>
                             <td id="noticeList">공지</td>
                             <td>
-                                <a href="/index.php/content?id='.$notice->idx.'">' . $notice->title . '</a></td>
+                                <a href="/index.php/content?id='.$notice->idx.'">' . $notice->title . Board_model::displayNew($notice->regdate) . '</a></td>
                             <td>' . $notice->name . '</td>
                             <td>' . Board_model::setRegdate($notice->regdate) . '</td>
                             <td>' . $notice->cnt . '</td>
