@@ -38,16 +38,19 @@ class Home extends CI_Controller {
 	public function index()
 	{
         
+		//레이아웃 파일 설정
+		$this->layout = 'default';
+		$this->yield = true;
+		$this->left = 'left3' ;
+
         $this->load->view('boardAjax/home');
     }
 
 
 	public function ajaxList()
 	{
-		$aa = $this->input->post('data');
+		$curPage = $this->input->post('curPage');
 		
-		var_dump($aa); 
-		echo $aa;
 	
 		$boardList 	= $this->board_model->get_view(1, 5, ""); //리스트 출력
 		$noticeList = $this->board_model->get_noticeView();
@@ -57,11 +60,10 @@ class Home extends CI_Controller {
 
 		$datatest = array('boardList' => $boardList);
 
-		//echo  json_encode($datatest); 
+		echo  json_encode($boardList); 
 
 		
 
-/*
         foreach($noticeList as $notice)
         {
             array_push($noticeArr, $notice->idx);
@@ -69,9 +71,11 @@ class Home extends CI_Controller {
             array_push($noticeArr, urlencode($notice->title));
             array_push($noticeArr, urlencode($notice->content));
             array_push($noticeArr, $notice->regdate);
+
+
+
         } 
-*/
- //       echo urldecode(json_encode($boardArr));
+ //       echo urldecode(json_encode($noticedArr));
     
 
   //      $data['boardList'] = urldecode(json_encode($boardArr));

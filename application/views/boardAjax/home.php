@@ -89,8 +89,8 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-var test = {
-                "data" : "100"
+var page = {
+                "curPage" : "1"
             };
 
 
@@ -98,16 +98,15 @@ var test = {
             $.ajax({
             url : '/index.php/boardAjax/home/ajaxList',
             type : 'POST',
-            data : test,
+            data : page,
+			contentType : 'application/json; charset=utf-8',
             success: function (r) {
-                if(r == "100")
-                {
-                    console.log("성공! : "+ r);
-                } else {
-                    console.log("ㅠㅠ! : ");
-                }
-               
+              console.log('r : ' + r); 
+			  $("#board_list").html(r);
             }
+			, error : function (request, status, error) {
+					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
+			}
     });
 
 
