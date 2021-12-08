@@ -88,23 +88,29 @@
 
 <script type="text/javascript">
 
-$(function() {
+$(document).ready(function() {
+var test = {
+                data : 100
+            };
 
-   $("#board_list").append("<tr><td>sasa</td></tr>");
-   var output   = $("#board_list");
 
-   $.ajax({
-                type    : 'POST',
-                url     : '/index.php/ajax',
-                dataType: 'json',
 
-                success : function(result)
+            $.ajax({
+            url : '/index.php/boardAjax/home/ajaxList',
+            type : 'POST',
+            data : test,
+            success: function (r) {
+                if(r == 100)
                 {
-                    
-                    console.log("dd" + result);
-                   
+                    console.log("성공! : "+ r);
+                } else {
+                    console.log("ㅠㅠ! : ");
                 }
+               
+            }
     });
+
+
 
 });
 

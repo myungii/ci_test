@@ -37,30 +37,28 @@ class Home extends CI_Controller {
 
 	public function index()
 	{
-
-
-        $boardList 	= $this->board_model->get_view(1, 5, ""); //리스트 출력
-		$noticeList = $this->board_model->get_noticeView();
-
-		echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
-		echo "<meta http-equiv='Content-Type' content='application/vnd.ms-excel; charset=utf-8'>";
-
         
+        $this->load->view('boardAjax/home');
+    }
+
+
+	public function ajaxList()
+	{
+		$aa = $this->input->post('data');
+		
+		echo $aa;
+	
+		$boardList 	= $this->board_model->get_view(1, 5, ""); //리스트 출력
+		$noticeList = $this->board_model->get_noticeView();
 
         $boardArr  = array();
         $noticeArr = array();
 
-        foreach($boardList as $list)
-        {
-            array_push($boardArr, $list->idx);
-            array_push($boardArr, urlencode($list->name));
-            array_push($boardArr, urlencode($list->title));
-            array_push($boardArr, urlencode($list->content));
-            array_push($boardArr, $list->regdate);
+		$datatest = array('boardList' => $boardList);
 
-        }
+		//echo  json_encode($datatest); 
 
-		print_r($boardList); 
+		
 
 /*
         foreach($noticeList as $notice)
@@ -79,8 +77,6 @@ class Home extends CI_Controller {
  //       $data['noticeList'] = urldecode(json_encode($noticeArr));
 
 
-        
-        //$this->load->view('boardAjax/home');
-    }
+	}
 
 }
