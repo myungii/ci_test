@@ -15,7 +15,7 @@
 <!-- Contents -->
 <div id="Contents" style="width:1400px; padding-left:20em;">
     <!-- filter -->
-    <form id="FrmAttendanceSearch" method="get" action="/" >
+    <form id="FrmAttendanceSearch" >
     <input type="hidden" name="p" value="">
     <table class="table table-bordered table-form pad">
         <colgroup>
@@ -35,7 +35,7 @@
     </table>
 
     <div class="area-button">
-        <button type="submit" class="btn btn-lg btn-theme" onclick="">검색</button>
+        <button type="button" id="searchBtn" class="btn btn-lg btn-theme" onclick="">검색</button>
     </div>
     </form>
     
@@ -89,25 +89,55 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-var page = {
-                "curPage" : "1"
-            };
 
+	load_data();
 
+	function load_data()
+	{
 
-            $.ajax({
-            url : '/index.php/boardAjax/home/ajaxList',
-            type : 'POST',
-            data : page,
-			contentType : 'application/json; charset=utf-8',
-            success: function (r) {
-              console.log('r : ' + r); 
-			  $("#board_list").html(r);
-            }
+		$.ajax({
+			url : "/index.php/boardAjax/home/ajaxList",
+			type : "POST",
+			dataType : "text",
+			crossOrigin : false,
+			success :function(data) {
+				console.log(data);
+
+			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
+
 			}
-    });
+
+		});
+
+	}
+
+
+	function htmlData(json) {
+
+
+		var html = '<tr>';
+		$(json).each(function() {
+
+				html += '<td id="bidx">' + this.idx  + '</td>';
+				html += '<td id="bname">' + this.title + '</td>';
+				html += '<td id="bregdate">' + this.name + '</td>';
+				html += '<td id="bcnt">' + this.regdate + '</td> </tr>';
+
+			
+		});
+
+		 $("#board_list").html(html);
+
+	}
+
+	
+	$('#searchBtn').click(function() {
+
+
+	});
+
 
 
 

@@ -22,6 +22,7 @@ class Home extends CI_Controller {
 		parent::__construct();
 
 		$this->load->model('board_model');
+		$this->load->model('/pagination/paging');
 
 
 		//레이아웃 파일 설정
@@ -55,7 +56,7 @@ class Home extends CI_Controller {
 		$rowsPage 			= 10;
 
 		$total 				= $this->board_model->getTotal($searchText);
-		$totalPage 			= $this->board_model->totalPage($total, $rowsPage);
+		$totalPage 			= $this->paging->totalPage($total, $rowsPage);
 		
         $data['boardList'] 	= $this->board_model->get_view($curPage, $rowsPage, $searchText); //리스트 출력
 		$data['noticeList'] = $this->board_model->get_noticeView();
@@ -75,7 +76,7 @@ class Home extends CI_Controller {
 
 		);
 
-		$data['pagingArr'] = $this->board_model->pageView($arr);
+		$data['pagingArr'] = $this->paging->pageView($arr);
 
 
 
