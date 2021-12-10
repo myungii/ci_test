@@ -59,53 +59,57 @@ class Home extends CI_Controller {
 
 		$data = $this->ajax_model->get_view($query);
 
-
-		
-		$this->output->set_content_type('application/json/');
-		//echo  json_encode($data, JSON_UNESCAPED_UNICODE); 
-		echo jason_encode(array("abc"=>"abcde"));
-		exit;
-
-/*
-
-		if($data->num_rows() > 0)
+		$result = array();
+		foreach($data as $li)
 		{
 
-			foreach($data->result() as $row)
-			{
+				if($li->fileid == null)
+				{
+				$li->filed = "";
 
-				$output .= '
-					         <tr>
-						         <td id="noticeList">' . $row->idx  .' </td>
-							     <td>
-								     <a href="#">' . $row->title .'</a></td>
-								<td>' . $row->name . '</td>
-				    		     <td>' . $row->regdate . '</td>
-							     <td>' . $row->cnt . '</td>
-							 </tr>
-							';
+				}
 
-			}
 
-		} else {
-			$output .= '<tr> 
-							<td colspan="5"> 테이터가 없습니다 </td>
-					    </td>';
+				if($li->notice == null)
+				{	
+				$li->notice = "";
+
+				}
+
+
+				if($li->modidate == null)
+				{
+				$li->modidate = "";
+
+				}
+
+
+			$row = array (
+
+				$row["idx"]			= $li->idx,
+				$row["title"]		= $li->title,
+				$row["name"]		= $li->name,
+				$row["content"]		= $li->content,
+				$row["cnt"]			= $li->cnt,
+				$row["regdate"]		= $li->regdate,
+				$row["fileid"]		= $li->fileid,
+				$row["notice"]		= $li->notice,
+				$row["modidate"]	= $li->modidate
+
+			);
+
+		$result[] = $row;
 
 		}
 
-		echo $output;
-*/
+var_dump(json_encode($result, JSON_UNESCAPED_UNICODE));exit;
+		
+		$this->output->set_content_type('application/json/');
+		echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
-
-	
-
-
- //       echo urldecode(json_encode($noticedArr));
     
 
   //      $data['boardList'] = urldecode(json_encode($boardArr));
- //       $data['noticeList'] = urldecode(json_encode($noticeArr));
 
 
 	}

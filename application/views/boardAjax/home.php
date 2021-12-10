@@ -98,11 +98,14 @@ $(document).ready(function() {
 		$.ajax({
 			url : "/index.php/boardAjax/home/ajaxList",
 			type : "POST",
-			dataType : "text",
+			dataType : "json",
 			crossOrigin : false,
 			success :function(data) {
-				console.log(data);
+				alert('ddd');
+				//var json = JSON.parse(data);
+				//console.log(json);
 
+//				console.log(typeof(data));
 			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
@@ -120,15 +123,19 @@ $(document).ready(function() {
 		var html = '<tr>';
 		$(json).each(function() {
 
+			console.log("ddddddddddddddddd : ");
+
+/*
 				html += '<td id="bidx">' + this.idx  + '</td>';
 				html += '<td id="bname">' + this.title + '</td>';
 				html += '<td id="bregdate">' + this.name + '</td>';
 				html += '<td id="bcnt">' + this.regdate + '</td> </tr>';
 
+*/
 			
 		});
 
-		 $("#board_list").html(html);
+		 //$("#board_list").html(html);
 
 	}
 

@@ -38,7 +38,7 @@ class Ajax_model extends CI_Model {
 	
 		$result = $this->db->get();
 
-		return $result->result_array();
+		return $result->result();
 
 	}
 
