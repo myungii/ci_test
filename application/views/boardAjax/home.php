@@ -42,7 +42,7 @@
         <!-- btn, total -->
         <h3 class="area-title">
         Total :
-        <span class="f-bold"><strong><span id="recordsTotal">0</span></strong>건</span>
+        <span class="f-bold"><strong><span id="recordsTotal"></span></strong>건</span>
         <div class="button-box">
             <button class="btn btn-flat-blue" onclick="location.replace('/index.php/write');" style="float: left;">게시물 등록</button>
         </div>
@@ -98,14 +98,15 @@ $(document).ready(function() {
 		$.ajax({
 			url : "/index.php/boardAjax/home/ajaxList",
 			type : "POST",
-			dataType : "json",
+			contentType : 'json',
 			crossOrigin : false,
 			success :function(data) {
-				alert('ddd');
-				//var json = JSON.parse(data);
-				//console.log(json);
+				var json = JSON.parse(data);
 
-//				console.log(typeof(data));
+				$("span#recordsTotal").text(json.total);
+
+				htmlData(json.list);
+
 			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
@@ -119,23 +120,21 @@ $(document).ready(function() {
 
 	function htmlData(json) {
 
+		for(var i in json)
+		{
 
-		var html = '<tr>';
-		$(json).each(function() {
+			var row = $("<tr/>").append(
+				$("<td/>").text(json[i].idx),
+				$("<td/>").text(json[i].title),
+				$("<td/>").text(json[i].name),
+				$("<td/>").text(json[i].regdate),
+				$("<td/>").text(json[i].cnt)
 
-			console.log("ddddddddddddddddd : ");
+			);
+			$("#board_list").append(row);
 
-/*
-				html += '<td id="bidx">' + this.idx  + '</td>';
-				html += '<td id="bname">' + this.title + '</td>';
-				html += '<td id="bregdate">' + this.name + '</td>';
-				html += '<td id="bcnt">' + this.regdate + '</td> </tr>';
+		}
 
-*/
-			
-		});
-
-		 //$("#board_list").html(html);
 
 	}
 

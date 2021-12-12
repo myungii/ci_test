@@ -40,6 +40,7 @@
 $route['default_controller'] = "home";
 $route['ajax'] = "boardAjax/home";
 $route['testcode'] = "code/test";
+$route['ajax_write'] = "boardAjax/write";
 $route['404_override'] = '/';
 
 

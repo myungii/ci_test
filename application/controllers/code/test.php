@@ -53,15 +53,18 @@ class Test extends CI_Controller {
 
 
 //문자열 검사
-		$chk1 = substr($a, 43, 14);
-		$chk2 = substr($a, 57, 10);
-		$chk3 = substr($a, 30, 4);
+		$chk1 = substr($a, 82, 12);
+		$chk2 = substr($b, 82, 12);
+		$chk3 = substr($c, 82, 12);
 
 
 		echo "chk1 결과 : " . $chk1 . "<br>";
 		echo "chk2 결과 : " . $chk2 . "<br>";
 		echo "chk3 결과 : " . $chk3 . "<br>";
 
+//문자열 찾기
+		$findout1 = strpos($a, '000000000000');
+		echo "문자열 찾기 결과 : " . $findout1 . "<br>";
 
 		
 		
@@ -75,7 +78,7 @@ class Test extends CI_Controller {
 		$str .= substr($a, 27, 3); //단말기 구분
 		$str .= substr($a, 30, 4); //응답 코드
 		$str .= substr($a, 34, 9); //user ID
-
+		$str .= substr($a, 82, 12); //보고서 인증번호
 
 
 

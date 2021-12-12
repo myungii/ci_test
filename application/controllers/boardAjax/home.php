@@ -59,59 +59,143 @@ class Home extends CI_Controller {
 
 		$data = $this->ajax_model->get_view($query);
 
-		$result = array();
 		foreach($data as $li)
 		{
-
-				if($li->fileid == null)
-				{
+			if($li->fileid == null)
+			{
 				$li->filed = "";
+			}
 
-				}
-
-
-				if($li->notice == null)
-				{	
+			if($li->notice == null)
+			{	
 				$li->notice = "";
+			}
 
-				}
-
-
-				if($li->modidate == null)
-				{
+			if($li->modidate == null)
+			{
 				$li->modidate = "";
-
-				}
-
+			}
 
 			$row = array (
-
-				$row["idx"]			= $li->idx,
-				$row["title"]		= $li->title,
-				$row["name"]		= $li->name,
-				$row["content"]		= $li->content,
-				$row["cnt"]			= $li->cnt,
-				$row["regdate"]		= $li->regdate,
-				$row["fileid"]		= $li->fileid,
-				$row["notice"]		= $li->notice,
-				$row["modidate"]	= $li->modidate
-
+				"idx"			=> $li->idx,
+				"title"			=> $li->title,
+				"name"			=> $li->name,
+				"content"		=> $li->content,
+				"cnt"			=> $li->cnt,
+				"regdate"		=> $li->regdate,
+				"fileid"		=> $li->fileid,
+				"notice"		=> $li->notice,
+				"modidate"		=> $li->modidate
 			);
 
-		$result[] = $row;
+			$list[] = $row;
+
 
 		}
 
-var_dump(json_encode($result, JSON_UNESCAPED_UNICODE));exit;
-		
-		$this->output->set_content_type('application/json/');
-		echo json_encode($result, JSON_UNESCAPED_UNICODE);
+		$total = $this->ajax_model->getTotal();
 
-    
+
+		$paging = array(
+					"a" => 1,
+					"b" => "abc",
+					"c" => 123
+
+		);
+
+
+
+			$result = array( "list" => $list, "total" => $total, "paging" => $paging );
+
+
+		$this->output->set_content_type('application/json');
+		$this->display($result);
 
   //      $data['boardList'] = urldecode(json_encode($boardArr));
 
 
 	}
+
+
+	public function save() {/*{{{*/
+		
+
+		//저장
+		$name		= $this->input->post('name');
+		$title		= $this->input->post('title');
+		$content	= $this->input->post('content');
+		$notice		= $this->input->post('notice');
+
+		if($notice == 'Y')
+		{
+			$notice = 1;
+		} else {
+			$notice = 0;
+		}
+
+		$data = array(
+					'name' 		=> $name,
+					'title' 	=> $title,
+					'content' 	=> $content,
+					'notice' 	=> $notice
+			);
+		$result = $this->Board_model->add($data);
+		$lastId = (int)$this->db->insert_id();
+
+
+		//파일 업로드 및 저장
+		$config['upload_path'] 		= './uploads';
+		$config['allowed_types']	= 'gif|jpg|png';
+		$config['max_size']			= '0';
+		$config['max_width']		= '0';
+		$config['max_height']		= '0';
+
+
+		$this->load->library('upload', $config);
+
+
+		if($this->upload->do_upload('upload_file') == true) {
+			$fileInfo =  $this->upload->data();
+
+			$fileData = array(
+								'boardId' 		=> $lastId,
+								'fileName' 		=> $fileInfo['file_name'],
+								'fileSize'		=> intval($fileInfo['file_size']),
+								'filePath'		=> $fileInfo['file_path'],
+								'fileType'		=> $fileInfo['file_type'],
+								'regdate'		=> date("Y-m-d H:i:s"),
+								'fullFilePath'	=> $fileInfo['full_path']
+						);
+			
+			$this->Board_model->fileUpload($fileData);
+			
+		} 
+
+
+		if($result == true)
+		{
+			echo "200";
+			exit;
+		}
+		else {
+			echo "99";
+		}
+
+
+
+	}/*}}}*/
+
+	/*********************
+	* @title 공용 출력
+	* @param $data json
+	* @return json
+	**********************/
+	public function display($data)/*{{{*/
+	{
+		echo json_encode($data, JSON_UNESCAPED_UNICODE);
+		exit;
+	}/*}}}*/
+
+
 
 }

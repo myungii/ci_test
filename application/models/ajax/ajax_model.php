@@ -44,6 +44,16 @@ class Ajax_model extends CI_Model {
 
 
 
+    //총 게시글 개수
+    function getTotal() {
+        //$query = "SELECT count(*) as cnt FROM board";
+        $query = 'SELECT count(*) as cnt FROM board ';
+        
+        return $this->db->query($query)->row('cnt');
+    }
+
+
+
     private function _call_json($is_valid) {
         $json               = null;
         $json['is_valid']   = $is_valid;
