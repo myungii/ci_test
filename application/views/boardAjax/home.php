@@ -6,7 +6,9 @@
         #new {
             color : red;
         }
- 
+
+		.ui-datepicker-trigger{cursor: pointer;}
+		.datepicker{cursor: pointer;} 
     </style>
 </head>
 
@@ -19,18 +21,50 @@
     <input type="hidden" name="p" value="">
     <table class="table table-bordered table-form pad">
         <colgroup>
-            <col width="120px">
             <col>
-    
+			<col style="width:400px">
         </colgroup>
+		
         <tbody>
             <tr>
-                <th>제목</th>
+                <th>재목</th>
                 <td>
-                    <input type="text" name="filter_name" class="form-control input-xsm"  style="width:1022px;"  value="" autocomplete="off">
+                    <input type="text" name="search_title" class="form-control input-xsm"   value="" autocomplete="off">
+                </td>
+
+                <th>이름</th>
+                <td>
+                    <input type="text" name="search_name" class="form-control input-xsm"  value="" autocomplete="off">
                 </td>
             </tr>
 
+            <tr>
+                <th>등록일</th>
+                <td>
+					<div style="float:left; width:180px">
+						 <input type="text" name="search_reg_start" class="datepicker" id="datepicker_start" style="width:100%"  value="" autocomplete="off" readonly>
+					</div>	
+					<div style="float:left;">
+						<span style="margin:0 5px; line-height:30ox;">
+							~
+						</span>
+					</div>
+					<div style="float:left;width:180px;">
+						 <input type="text" name="search_reg_end" class="datepicker" id="datepicker_end" style="width:100%"  value="" autocomplete="off" readonly>
+					</div>	
+
+                </td>
+
+                <th>공지여부</th>
+                <td style="text-align:start;">
+                  <input type="radio" name="notice" value="all" class="hmis validate" checked >
+                  <span class="lbl">전체</span>
+                  <input type="radio" name="notice" value="Y" class="hmis validate" >
+                  <span class="lbl">공지</span>
+                  <input type="radio" name="notice" value="N" class="hmis validate">
+                  <span class="lbl">일반</span>
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -88,18 +122,51 @@
 
 <script type="text/javascript">
 
+        $(function() {
+            //모든 datepicker에 대한 공통 옵션 설정
+            $.datepicker.setDefaults({
+                dateFormat: 'yy-mm-dd' //Input Display Format 변경
+                ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+                ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+                ,changeYear: true //콤보박스에서 년 선택 가능
+                ,changeMonth: true //콤보박스에서 월 선택 가능                
+                ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+                ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+                ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+                ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+                ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+                ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+                ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
+            });
+ 
+            //input을 datepicker로 선언
+            $("#datepicker_start").datepicker();                    
+            $("#datepicker_end").datepicker();
+            
+            //To의 초기값을 내일로 설정
+            $('#datepicker_end').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+        });
+
+
+
 $(document).ready(function() {
 
 	load_data();
 
-	function load_data()
+	function load_data(search)
 	{
+			console.log('됨');
+			if(search != null){ 
+				console.log(typeof(search));
+			}
+
 
 		$.ajax({
 			url : "/index.php/boardAjax/home/ajaxList",
 			type : "POST",
-			contentType : 'json',
-			crossOrigin : false,
+			data : { search : search },
+			dataType : 'text',
+			contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 			success :function(data) {
 				var json = JSON.parse(data);
 
@@ -140,7 +207,27 @@ $(document).ready(function() {
 
 	
 	$('#searchBtn').click(function() {
+		$("#board_list").remove();
 
+	   let title 		= $("input[name=search_title]").val();	
+	   let name 		= $("input[name=search_name]").val();	
+	   let reg_start 	= $("input[name=search_reg_start]").val();	
+	   let reg_end 		= $("input[name=search_reg_end]").val();	
+	   let notice 		= $("input[name=notice]").val();	
+
+console.log("title : " + title + " & name : " + name + " & reg_start : " + reg_start + " & reg_end : " + reg_end + " & notice : " + notice);
+
+		let search     		= new Object();
+
+		search.title   		= title;
+		search.name   		= name;
+		search.reg_start   	= reg_start;
+		search.reg_end   	= reg_end;
+		search.notice   	= notice;
+
+		//let param_data      = new Array();
+		//param_data.push(search);
+		load_data(search);
 
 	});
 

@@ -50,11 +50,11 @@ class Home extends CI_Controller {
 		$output = '';
 		$query = '';
 
-		if($this->input->post('query'))
+		if($this->input->post('search'))
 		{
-			$query = $this->input->post('query');
-
+			$query = $this->input->post('search');
 		}
+
 
 
 		$data = $this->ajax_model->get_view($query);
