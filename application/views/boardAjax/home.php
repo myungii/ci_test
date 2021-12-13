@@ -57,11 +57,11 @@
 
                 <th>공지여부</th>
                 <td style="text-align:start;">
-                  <input type="radio" name="notice" value="all" class="hmis validate" checked >
+                  <input type="radio" name="notice" id="all" value="all" class="hmis validate" checked>
                   <span class="lbl">전체</span>
-                  <input type="radio" name="notice" value="Y" class="hmis validate" >
+                  <input type="radio" name="notice" id="yes" value="Y" class="hmis validate" >
                   <span class="lbl">공지</span>
-                  <input type="radio" name="notice" value="N" class="hmis validate">
+                  <input type="radio" name="notice" id="no" value="N" class="hmis validate">
                   <span class="lbl">일반</span>
                 </td>
             </tr>
@@ -110,7 +110,6 @@
             
         <div id="paging" class="area-button">
         <ul class="pagination">
-
         </ul>
         
         </div>
@@ -142,7 +141,6 @@
             //input을 datepicker로 선언
             $("#datepicker_start").datepicker();                    
             $("#datepicker_end").datepicker();
-            
             //To의 초기값을 내일로 설정
             $('#datepicker_end').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
         });
@@ -152,10 +150,10 @@
 $(document).ready(function() {
 
 	load_data();
+});
 
 	function load_data(search)
 	{
-			console.log('됨');
 			if(search != null){ 
 				console.log(typeof(search));
 			}
@@ -170,9 +168,10 @@ $(document).ready(function() {
 			success :function(data) {
 				var json = JSON.parse(data);
 
+				$("input[name=p]").attr("value", json.p);
+				paging(json.paging);
 				$("span#recordsTotal").text(json.total);
-
-				htmlData(json.list);
+				htmlData(json.list );
 
 			}
 			, error : function (request, status, error) {
@@ -198,24 +197,34 @@ $(document).ready(function() {
 				$("<td/>").text(json[i].cnt)
 
 			);
-			$("#board_list").append(row);
 
+			//$("#board_list").remove();
+			$("#board_list").append(row);
 		}
 
 
 	}
 
+	function paging(json) {
+		
+		for(var i in json)
+		{
+			$("ul.pagination").html(json[i]);
+
+		}
+
+	}
+
 	
-	$('#searchBtn').click(function() {
-		$("#board_list").remove();
+	$('#searchBtn').click(function(e) {
+		$("#board_list").html('');
 
 	   let title 		= $("input[name=search_title]").val();	
 	   let name 		= $("input[name=search_name]").val();	
 	   let reg_start 	= $("input[name=search_reg_start]").val();	
 	   let reg_end 		= $("input[name=search_reg_end]").val();	
-	   let notice 		= $("input[name=notice]").val();	
+	   let notice 		= $("input[type=radio]:checked").val();	
 
-console.log("title : " + title + " & name : " + name + " & reg_start : " + reg_start + " & reg_end : " + reg_end + " & notice : " + notice);
 
 		let search     		= new Object();
 
@@ -225,8 +234,6 @@ console.log("title : " + title + " & name : " + name + " & reg_start : " + reg_s
 		search.reg_end   	= reg_end;
 		search.notice   	= notice;
 
-		//let param_data      = new Array();
-		//param_data.push(search);
 		load_data(search);
 
 	});
@@ -234,6 +241,5 @@ console.log("title : " + title + " & name : " + name + " & reg_start : " + reg_s
 
 
 
-});
 
 </script>

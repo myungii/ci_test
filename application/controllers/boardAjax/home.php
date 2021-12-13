@@ -47,17 +47,37 @@ class Home extends CI_Controller {
 	public function ajaxList()
 	{
 		
-		$output = '';
 		$query = '';
-
+		
+		//검색
 		if($this->input->post('search'))
 		{
 			$query = $this->input->post('search');
 		}
 
+		//페이지 시작 변수
+		if($this->input->post('page'))
+		{
+			$page = $thist->input->post('page');
+		} else { $page = 1; }
 
+		//현재 페이지
+		if($this->input->post('p'))
+		{
+			$curPage = $this->input->post('p');
 
+		} else { $curPage = 1; }
+
+		$url		= $_SERVER['PHP_SELF'];
+		$link_url	= $_SERVER['QUERY_STRING'];
+
+		//표시되는 페이지 수
+		$rowsPage	= 10;
+		
+		//리스트 출력
 		$data = $this->ajax_model->get_view($query);
+
+		$list = array();
 
 		foreach($data as $li)
 		{
@@ -93,19 +113,25 @@ class Home extends CI_Controller {
 
 		}
 
-		$total = $this->ajax_model->getTotal();
+		//레코드 갯수 출력
+		$total = $this->ajax_model->getTotal($query);
 
+		$totalPage	= $this->paging->totalPage($total, $rowsPage);
 
-		$paging = array(
-					"a" => 1,
-					"b" => "abc",
-					"c" => 123
+		//페이징
+		$pagingArr = array(
+					"url"		=> $url,
+					"total"		=> $total,
+					"rowsPage"	=> $rowsPage,
+					"curPage"	=> $curPage,
+					"link_url"	=> $link_url
 
 		);
+		$paging = $this->paging->pageView($pagingArr);
 
 
-
-			$result = array( "list" => $list, "total" => $total, "paging" => $paging );
+		$result = array( "list" => $list, "total" => $total, "paging" => $paging, "p" => $curPage);
+		//$result = array( "list" => $list, "total" => $total);
 
 
 		$this->output->set_content_type('application/json');
