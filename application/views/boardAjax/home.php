@@ -152,7 +152,7 @@ $(document).ready(function() {
 	load_data();
 });
 
-	function load_data(search)
+	function load_data(search, p, page)
 	{
 			if(search != null){ 
 				console.log(typeof(search));
@@ -162,7 +162,7 @@ $(document).ready(function() {
 		$.ajax({
 			url : "/index.php/boardAjax/home/ajaxList",
 			type : "POST",
-			data : { search : search },
+			data : { search : search, p : p, page : page},
 			dataType : 'text',
 			contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 			success :function(data) {
@@ -172,7 +172,7 @@ $(document).ready(function() {
 				$("input[name=p]").attr("value", json.p);
 				$("span#recordsTotal").text(json.total);
 				htmlData(json.list);
-				paging(json.paging);
+				paging(json.paging, json.pagingArr);
 			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
@@ -205,12 +205,47 @@ $(document).ready(function() {
 
 	}
 
-	function paging(json) {
+	function paging(json, arr) {
+		/*
 		for(var i=0; i<json.length; i++) {	
 			 $("ul.pagination").append(json[i]);
 		}
+		*/
+
+           if (json.current_block > 2) {
+           	    // $("ul.pagination").append("<li><a href='" + arr.url + "?p=1&" +  arr.link_url + "'>◀</a></li> ");
+				 $("ul.pagination").append("<li><a id='page-1' href='#'>◀</a></li>");
+            }
+            if (json.current_block > 1) {
+                 //$("ul.pagination").append("<li><a href='" + arr.url + "?p=" + json.prev + "&" + arr.link_url + "'>◁</a></li> ");
+				$("ul.pagination").append("<li><a id='page-" + json.prev + "' href='#'>◁</a></li>");
+			}
+            for(var i=1; i<=json.current.length; i++) {
+
+                if ($("input[name=p]").val() == i) {
+
+                  //  $("ul.pagination").append("<li class='act'><a href='" + arr.url + "?p=" + i + "&" + arr.link_url  + "'><span style='color:red;'>" + i + "</span></a></li> ");
+
+					$("ul.pagination").append("<li class='act'><a id='page-" + i + "' href='#'><span style='color:red;'>" + i + "</span></a></li>");
+                } else {
+                  //   $("ul.pagination").append("<li><a href='" + arr.url + "?p=" + i + "&" + arr.link_url + "'>" + i + "</a></li> ");
+
+					 $("ul.pagination").append("<li><a id='page-" + i + "' href='#'>" + i + "</a></li>");
+                }
+            }
+            if (json.current_block < (json.total_block)) {
+              //  $("ul.pagination").append("<li><a href='" + arr.url + "?p=" + json.next + "&" + arr.link_url + "'>▷</a></li> ");
+				$("ul.pagination").append("<li><a id='page-" + json.next + "' href='#'>▷</a></li>");
+            }
+            if (json.current_block < (json.total_block - 1)) {
+              //  $("ul.pagination").append("<li><a href='" + arr.url + "?p=" + json.totalPage + "&" + arr.link_url + "'>▶</a></li> ");
+				 $("ul.pagination").append("<li><a id='page-" + json.totalPage + "' href='#'>▶</a></li>");
+            }
+
 
 	}
+
+
 
 	
 	$('#searchBtn').click(function(e) {
@@ -231,7 +266,9 @@ $(document).ready(function() {
 		search.reg_end   	= reg_end;
 		search.notice   	= notice;
 
-		load_data(search);
+		let page = $("input[name]=p]").val();
+
+		load_data(search, page);
 
 	});
 

@@ -131,7 +131,7 @@ class Home extends CI_Controller {
 		$paging = $this->paging->pageView($pagingArr);
 
 
-		$result = array( "list" => $list, "total" => $total, "paging" => $paging, "p" => $curPage);
+		$result = array( "list" => $list, "total" => $total, "paging" => $paging, "pagingArr" => $pagingArr, "p" => $curPage);
 		//$result = array( "list" => $list, "total" => $total);
 
 
@@ -144,11 +144,17 @@ class Home extends CI_Controller {
 	}
 
 
-	public function ajaxPaging($pagingArr) 
+	public function ajaxPaging() 
 	{
-		echo "ddd"; exit;
 
-		$paging = $this->paging->pagieView($pagingArr);
+		//검색
+		if($this->input->post('pagingArr'))
+		{
+			$param = $this->input->post('pagingArr');
+		}
+print_r($param);
+
+		$paging = $this->paging->pagieView($param);
 
 		$this->display($paging);
 
