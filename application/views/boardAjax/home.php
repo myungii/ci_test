@@ -167,12 +167,12 @@ $(document).ready(function() {
 			contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 			success :function(data) {
 				var json = JSON.parse(data);
+				//console.log(json.paging);
 
 				$("input[name=p]").attr("value", json.p);
-				paging(json.paging);
 				$("span#recordsTotal").text(json.total);
-				htmlData(json.list );
-
+				htmlData(json.list);
+				paging(json.paging);
 			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
@@ -206,11 +206,8 @@ $(document).ready(function() {
 	}
 
 	function paging(json) {
-		
-		for(var i in json)
-		{
-			$("ul.pagination").html(json[i]);
-
+		for(var i=0; i<json.length; i++) {	
+			 $("ul.pagination").append(json[i]);
 		}
 
 	}

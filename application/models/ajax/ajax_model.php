@@ -18,28 +18,38 @@ class Ajax_model extends CI_Model {
     }
 
     //리스트 출력
-	function get_view($param) {
+	function get_view($param, $start, $rowsPage) {
+
+		$start = ($start - 1) * $rowsPage;
 
 		if(is_array($param)) {
 			$whereArr =	$this->_whereParam($param);
 
 		}
 
-		$this->db->select("*");
-		$this->db->from("board");
+//		$this->db->select("*");
+//		$this->db->from("board");
+
+		$query = 'SELECT * FROM board ';
 
 		if(is_array($param)) {
-			$this->db->where($whereArr); 
+//			$this->db->where($whereArr); 
+			$query .= 'WHERE ' . $whereArr;
 		}
 
-		$this->db->order_by('regdate', 'DESC');
+		$query .= 'ORDER BY regdate DESC limit ' . $start . ', ' . $rowsPage;
 
-		//return $this->db->get();
+//		$this->db->order_by('regdate', 'DESC');
+//		$this->db->limit($start, $rowsPage);
+
 	
-		$result = $this->db->get();
+//		$result = $this->db->get();
 
-		return $result->result();
 
+//		return $result->result();
+
+
+		return $this->db->query($query)->result();
 	}
 
 	//where 절

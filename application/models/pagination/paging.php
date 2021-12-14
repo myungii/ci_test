@@ -26,6 +26,8 @@ class Paging extends CI_Model {
         $link_url   = $arr['link_url'];
         //$qryChk     = $arr['qry'];
 
+		$isAjax		= $arr['isAjax'];
+
         
         //페이지 파라미터 중복제거
         if($link_url != '')
@@ -36,31 +38,32 @@ class Paging extends CI_Model {
 
         $Info = $this->_pageList($totalcnt, $rowsPage, $curPage, 5);
         
-        $result = array();
-        if ($Info['current_block'] > 2) {
-            array_push($result, "<li><a href='" . $url . "?p=1&" .  $link_url . "'>◀</a></li> ");
-        }
-        if ($Info['current_block'] > 1) {
-            array_push($result, "<li><a href='" . $url . "?p=" . $Info['prev'] . "&" . $link_url . "'>◁</a></li> ");
-        }
-        foreach ($Info['current'] as $w) {
-            
-            if ($curPage == $w) {
-                
-                array_push($result, "<li class='act'><a href='" . $url . "?p=" . $w . "&" . $link_url  . "'><span style='color:red;'>" . $w . "</span></a></li> ");
-                
-            } else {
-                array_push($result, "<li><a href='" . $url . "?p=" . $w . "&" . $link_url . "'>" . $w . "</a></li> ");
-            }
-        }
-        if ($Info['current_block'] < ($Info['total_block'])) {
-            array_push($result, "<li><a href='" . $url . "?p=" . $Info['next'] . "&" . $link_url . "'>▷</a></li> ");
-        }
-        if ($Info['current_block'] < ($Info['total_block'] - 1)) {
-            array_push($result, "<li><a href='" . $url . "?p=" . $Info['totalPage'] . "&" . $link_url . "'>▶</a></li> ");
-        }
+			$result = array();
+			if ($Info['current_block'] > 2) {
+				array_push($result, "<li><a href='" . $url . "?p=1&" .  $link_url . "'>◀</a></li> ");
+			}
+			if ($Info['current_block'] > 1) {
+				array_push($result, "<li><a href='" . $url . "?p=" . $Info['prev'] . "&" . $link_url . "'>◁</a></li> ");
+			}
+			foreach ($Info['current'] as $w) {
+				
+				if ($curPage == $w) {
+					
+					array_push($result, "<li class='act'><a href='" . $url . "?p=" . $w . "&" . $link_url  . "'><span style='color:red;'>" . $w . "</span></a></li> ");
+					
+				} else {
+					array_push($result, "<li><a href='" . $url . "?p=" . $w . "&" . $link_url . "'>" . $w . "</a></li> ");
+				}
+			}
+			if ($Info['current_block'] < ($Info['total_block'])) {
+				array_push($result, "<li><a href='" . $url . "?p=" . $Info['next'] . "&" . $link_url . "'>▷</a></li> ");
+			}
+			if ($Info['current_block'] < ($Info['total_block'] - 1)) {
+				array_push($result, "<li><a href='" . $url . "?p=" . $Info['totalPage'] . "&" . $link_url . "'>▶</a></li> ");
+			}
 
-        return $result;
+			return $result;
+
 
 	}
 

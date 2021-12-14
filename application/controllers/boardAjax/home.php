@@ -73,9 +73,9 @@ class Home extends CI_Controller {
 
 		//표시되는 페이지 수
 		$rowsPage	= 10;
-		
+
 		//리스트 출력
-		$data = $this->ajax_model->get_view($query);
+		$data = $this->ajax_model->get_view($query, $curPage, $rowsPage);
 
 		$list = array();
 
@@ -124,7 +124,8 @@ class Home extends CI_Controller {
 					"total"		=> $total,
 					"rowsPage"	=> $rowsPage,
 					"curPage"	=> $curPage,
-					"link_url"	=> $link_url
+					"link_url"	=> $link_url,
+					"isAjax"    => 1
 
 		);
 		$paging = $this->paging->pageView($pagingArr);
@@ -139,6 +140,17 @@ class Home extends CI_Controller {
 
   //      $data['boardList'] = urldecode(json_encode($boardArr));
 
+
+	}
+
+
+	public function ajaxPaging($pagingArr) 
+	{
+		echo "ddd"; exit;
+
+		$paging = $this->paging->pagieView($pagingArr);
+
+		$this->display($paging);
 
 	}
 
