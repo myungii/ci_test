@@ -152,27 +152,23 @@ $(document).ready(function() {
 	load_data();
 });
 
-	function load_data(search, p, page)
+	function load_data(search, page)
 	{
-			if(search != null){ 
-				console.log(typeof(search));
-			}
-
+			page = page? page : 0;
 
 		$.ajax({
 			url : "/index.php/boardAjax/home/ajaxList",
 			type : "POST",
-			data : { search : search, p : p, page : page},
+			data : { search : search, page : page},
 			dataType : 'text',
 			contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 			success :function(data) {
 				var json = JSON.parse(data);
-				//console.log(json.paging);
 
 				$("input[name=p]").attr("value", json.p);
 				$("span#recordsTotal").text(json.total);
-				htmlData(json.list);
-				paging(json.paging, json.pagingArr);
+				htmlData(json.list, json.page, json.total, json.pagingArr.rowsPage);
+				paging(json.paging, json.page);
 			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
@@ -184,68 +180,64 @@ $(document).ready(function() {
 	}
 
 
-	function htmlData(json) {
+	function htmlData(json, page, total, rowsPage) {
+		var index = total - (page - 1) * rowsPage;
 
 		for(var i in json)
 		{
 
 			var row = $("<tr/>").append(
-				$("<td/>").text(json[i].idx),
-				$("<td/>").text(json[i].title),
+
+				$("<td/>").text(index-i),
+				$("<td/>").html("<a href ='/index.php/boardAjax/content?id="+ json[i].idx +"'>" + json[i].title + "</a>"),
 				$("<td/>").text(json[i].name),
 				$("<td/>").text(json[i].regdate),
 				$("<td/>").text(json[i].cnt)
 
 			);
 
-			//$("#board_list").remove();
 			$("#board_list").append(row);
 		}
 
 
 	}
 
-	function paging(json, arr) {
-		/*
-		for(var i=0; i<json.length; i++) {	
-			 $("ul.pagination").append(json[i]);
-		}
-		*/
+	function paging(json, page) {
+
+		 $("ul.pagination").html('');
 
            if (json.current_block > 2) {
-           	    // $("ul.pagination").append("<li><a href='" + arr.url + "?p=1&" +  arr.link_url + "'>◀</a></li> ");
 				 $("ul.pagination").append("<li><a id='page-1' href='#'>◀</a></li>");
             }
             if (json.current_block > 1) {
-                 //$("ul.pagination").append("<li><a href='" + arr.url + "?p=" + json.prev + "&" + arr.link_url + "'>◁</a></li> ");
-				$("ul.pagination").append("<li><a id='page-" + json.prev + "' href='#'>◁</a></li>");
+				$("ul.pagination").append("<li><a id='" + json.prev + "' href='#'>◁</a></li>");
 			}
             for(var i=1; i<=json.current.length; i++) {
 
-                if ($("input[name=p]").val() == i) {
-
-                  //  $("ul.pagination").append("<li class='act'><a href='" + arr.url + "?p=" + i + "&" + arr.link_url  + "'><span style='color:red;'>" + i + "</span></a></li> ");
-
-					$("ul.pagination").append("<li class='act'><a id='page-" + i + "' href='#'><span style='color:red;'>" + i + "</span></a></li>");
+                if (page == i) {
+					$("ul.pagination").append("<li class='act'><a id='" + i + "' href='#'><span style='color:red;'>" + i + "</span></a></li>");
                 } else {
-                  //   $("ul.pagination").append("<li><a href='" + arr.url + "?p=" + i + "&" + arr.link_url + "'>" + i + "</a></li> ");
 
-					 $("ul.pagination").append("<li><a id='page-" + i + "' href='#'>" + i + "</a></li>");
+					 $("ul.pagination").append("<li><a id='" + i + "' href='#'>" + i + "</a></li>");
                 }
             }
             if (json.current_block < (json.total_block)) {
-              //  $("ul.pagination").append("<li><a href='" + arr.url + "?p=" + json.next + "&" + arr.link_url + "'>▷</a></li> ");
-				$("ul.pagination").append("<li><a id='page-" + json.next + "' href='#'>▷</a></li>");
+				$("ul.pagination").append("<li><a id='" + json.next + "' href='#'>▷</a></li>");
             }
             if (json.current_block < (json.total_block - 1)) {
-              //  $("ul.pagination").append("<li><a href='" + arr.url + "?p=" + json.totalPage + "&" + arr.link_url + "'>▶</a></li> ");
-				 $("ul.pagination").append("<li><a id='page-" + json.totalPage + "' href='#'>▶</a></li>");
+				 $("ul.pagination").append("<li><a id='" + json.totalPage + "' href='#'>▶</a></li>");
             }
 
 
 	}
 
 
+	$(document).on('click', 'ul.pagination li > a', function() {
+		var page = $(this).attr("id");
+		test = $("input[name=p]").attr("value", page);
+
+		 $('#searchBtn').click();
+	});
 
 	
 	$('#searchBtn').click(function(e) {
@@ -256,7 +248,8 @@ $(document).ready(function() {
 	   let reg_start 	= $("input[name=search_reg_start]").val();	
 	   let reg_end 		= $("input[name=search_reg_end]").val();	
 	   let notice 		= $("input[type=radio]:checked").val();	
-
+	   
+	   let page			= $("input[name=p]").val();
 
 		let search     		= new Object();
 
@@ -266,12 +259,9 @@ $(document).ready(function() {
 		search.reg_end   	= reg_end;
 		search.notice   	= notice;
 
-		let page = $("input[name]=p]").val();
-
 		load_data(search, page);
 
 	});
-
 
 
 

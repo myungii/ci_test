@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Write extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -40,106 +40,13 @@ class Home extends CI_Controller {
 	public function index()
 	{
         
-        $this->load->view('boardAjax/home');
+        $this->load->view('boardAjax/write');
     }
 
 
-	public function ajaxList()
-	{
-		
-		$query = '';
-		
-		//검색
-		if($this->input->post('search'))
-		{
-			$query = $this->input->post('search');
-		}
-
-		//현재 페이지
-		if($this->input->post('page'))
-		{
-			$curPage = $this->input->post('page');
-
-		} else { $curPage = 1; }
-
-		$url		= $_SERVER['PHP_SELF'];
-		$link_url	= $_SERVER['QUERY_STRING'];
-
-		//표시되는 페이지 수
-		$rowsPage	= 10;
-
-		//리스트 출력
-		$data = $this->ajax_model->get_view($query, $curPage, $rowsPage);
-
-		$list = array();
-
-		foreach($data as $li)
-		{
-			if($li->fileid == null)
-			{
-				$li->filed = "";
-			}
-
-			if($li->notice == null)
-			{	
-				$li->notice = "";
-			}
-
-			if($li->modidate == null)
-			{
-				$li->modidate = "";
-			}
-
-			$row = array (
-				"idx"			=> $li->idx,
-				"title"			=> $li->title,
-				"name"			=> $li->name,
-				"content"		=> $li->content,
-				"cnt"			=> $li->cnt,
-				"regdate"		=> $li->regdate,
-				"fileid"		=> $li->fileid,
-				"notice"		=> $li->notice,
-				"modidate"		=> $li->modidate
-			);
-
-			$list[] = $row;
 
 
-		}
-
-		//레코드 갯수 출력
-		$total = $this->ajax_model->getTotal($query);
-
-		$totalPage	= $this->paging->totalPage($total, $rowsPage);
-
-		//페이징
-		$pagingArr = array(
-					"url"		=> $url,
-					"total"		=> $total,
-					"rowsPage"	=> $rowsPage,
-					"curPage"	=> $curPage,
-					"link_url"	=> $link_url,
-					"isAjax"    => 1
-
-		);
-		$paging = $this->paging->pageView($pagingArr);
-
-
-		$result = array( "list" => $list, "total" => $total, "paging" => $paging, "pagingArr" => $pagingArr, "page" => $curPage);
-		//$result = array( "list" => $list, "total" => $total);
-
-
-		$this->output->set_content_type('application/json');
-		$this->display($result);
-
-  //      $data['boardList'] = urldecode(json_encode($boardArr));
-
-
-	}
-
-
-
-	public function save() {/*{{{*/
+	public function save() {
 		
 
 		//저장
@@ -205,18 +112,7 @@ class Home extends CI_Controller {
 
 
 
-	}/*}}}*/
-
-	/*********************
-	* @title 공용 출력
-	* @param $data json
-	* @return json
-	**********************/
-	public function display($data)/*{{{*/
-	{
-		echo json_encode($data, JSON_UNESCAPED_UNICODE);
-		exit;
-	}/*}}}*/
+	}
 
 
 

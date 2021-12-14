@@ -98,7 +98,6 @@ class Ajax_model extends CI_Model {
 
     //총 게시글 개수
     function getTotal($param) {
-        //$query = "SELECT count(*) as cnt FROM board";
 
 		if(is_array($param)){
 			$where = $this->_whereParam($param);
@@ -109,6 +108,38 @@ class Ajax_model extends CI_Model {
 		}
         
         return $this->db->query($query)->row('cnt');
+    }
+
+    //한 건 출력
+    function load($idx) {
+
+        if(!$idx) {
+            return false;
+        }
+
+        //조회수 추가
+        $this->_increaseCnt($idx);
+
+        $query      = "SELECT * FROM board WHERE idx = ". $idx;
+        $rowData    = $this->db->query($query)->row();
+
+        return $rowData;
+        
+    }
+
+
+	//파일 한 건 출력
+    function fileLoad($boardId) {
+
+        if(!$boardId) {
+            return "";
+        }
+
+        $query      = "SELECT * FROM board_file WHERE boardId = ". $boardId;
+        $rowData    = $this->db->query($query)->row();
+
+        return $rowData;
+        
     }
 
 
