@@ -72,7 +72,8 @@ class Home extends CI_Controller {
 			'total'		=> $total,
 			'rowsPage'	=> $rowsPage,
 			'curPage'	=> $curPage,
-			'link_url'	=> $link_url
+			'link_url'	=> $link_url,
+			'isAjax'    => 0
 
 		);
 

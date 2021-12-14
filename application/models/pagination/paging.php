@@ -38,6 +38,8 @@ class Paging extends CI_Model {
 
         $Info = $this->_pageList($totalcnt, $rowsPage, $curPage, 5);
         
+		if($isAjax != 1) 
+		{
 			$result = array();
 			if ($Info['current_block'] > 2) {
 				array_push($result, "<li><a href='" . $url . "?p=1&" .  $link_url . "'>◀</a></li> ");
@@ -63,7 +65,10 @@ class Paging extends CI_Model {
 			}
 
 			return $result;
+	   } else {
 
+			return $Info;
+	   }
 
 	}
 
