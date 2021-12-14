@@ -18,7 +18,7 @@
                    
             </a></li>
 
-            <li><a href="/"  class="">Plugin 게시판
+            <li><a href="/plugin"  class="">Plugin 게시판
                         <span class="badge  " style="background:#eb2c2c" data-toggle="tooltip" title="새글" style="width:25px;height:14px;" >
 
                         </span>
