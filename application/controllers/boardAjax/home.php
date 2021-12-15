@@ -23,6 +23,7 @@ class Home extends CI_Controller {
 
 		$this->load->model('board_model');
 		$this->load->model('/ajax/ajax_model');
+		$this->load->model('Reply_model');
 		$this->load->model('/pagination/paging');
 
 
@@ -125,14 +126,50 @@ class Home extends CI_Controller {
 		$paging = $this->paging->pageView($pagingArr);
 
 
-		$result = array( "list" => $list, "total" => $total, "paging" => $paging, "pagingArr" => $pagingArr, "page" => $curPage);
-		//$result = array( "list" => $list, "total" => $total);
-
+		$result = array( "list"			=> $list, 
+						 "total"		=> $total,
+						 "paging"		=> $paging,
+						 "pagingArr"	=> $pagingArr,
+						 "page"			=> $curPage);
 
 		$this->output->set_content_type('application/json');
 		$this->display($result);
 
   //      $data['boardList'] = urldecode(json_encode($boardArr));
+
+
+	}
+
+
+	public function content($num) 
+	{
+		$id = intval($num);	
+
+        //$id = $this->input->get('id');
+        $data['content'] 	= $this->ajax_model->load($id);
+
+		if($this->ajax_model->fileLoad($id)) {
+			$fileInfo = $this->ajax_model->fileLoad($id);
+			
+			$data['file_name']	= $fileInfo->fileName;
+			$data['file_idx']	= $fileInfo->idx;
+			
+		} else {
+			$data['file_name'] = '';
+			$data['file_idx']  = '';
+		}
+
+		
+
+		$data['pid'] 		= $id;
+		$data['reply']		= $this->Reply_model->get_view($id);
+		$data['total']		= $this->Reply_model->getTotal($id);
+
+		
+
+
+		$this->load->view('boardAjax/content', 	$data);
+		
 
 
 	}

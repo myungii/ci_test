@@ -32,7 +32,8 @@
 <!-- Contents -->
 <div id="Contents" style="width:1400px;padding-left:255px;">
     <!-- filter -->
-    <form id="FrmAttendanceSearch"  onsubmit="return false">
+    <form id="search_frm"  onsubmit="return false">
+    <input type="hidden" name="p" value="">
     <table class="table table-bordered table-form pad">
 
         <colgroup>
@@ -44,12 +45,12 @@
             <tr>
                 <th>재목</th>
                 <td>
-                    <input type="text" name="search_title" class="form-control input-xsm"   value="" autocomplete="off">
+                    <input type="text" name='title' class="form-control input-xsm"   value="" autocomplete="off">
                 </td>
 
                 <th>이름</th>
                 <td>
-                    <input type="text" name="search_name" class="form-control input-xsm"  value="" autocomplete="off">
+                    <input type="text" name="name" class="form-control input-xsm"  value="" autocomplete="off">
                 </td>
             </tr>
 
@@ -57,7 +58,7 @@
                 <th>등록일</th>
                 <td>
 					<div style="float:left; width:180px">
-						 <input type="text" name="search_reg_start" class="datepicker" id="datepicker_start" style="width:100%"  value="" autocomplete="off" readonly>
+						 <input type="text" name="regstart" class="datepicker" id="datepicker_start" style="width:100%"  value="" autocomplete="off" readonly>
 					</div>	
 					<div style="float:left;">
 						<span style="margin:0 5px; line-height:30ox;">
@@ -65,7 +66,7 @@
 						</span>
 					</div>
 					<div style="float:left;width:180px;">
-						 <input type="text" name="search_reg_end" class="datepicker" id="datepicker_end" style="width:100%"  value="" autocomplete="off" readonly>
+						 <input type="text" name="regend" class="datepicker" id="datepicker_end" style="width:100%"  value="" autocomplete="off" readonly>
 					</div>	
 
                 </td>
@@ -84,7 +85,7 @@
     </table>
 
     <div class="area-button">
-        <button type="submit" class="btn btn-lg btn-theme_bu" onclick="">검색</button>
+        <button type="submit" id="searchBtn" class="btn btn-lg btn-theme_bu" onclick="board_list.ajax.reload();">검색</button>
     </div>
     </form>
 
@@ -151,7 +152,7 @@ var board_list;
 
 $(function() {
 	board_list = $("#board_list").DataTable({
-		 "dom" : 't<"pagination"p>r',
+		"dom" : 't<"pagination"p>r',
         "info" : false,
         "filter" : false,
         "paging" : true,
@@ -170,28 +171,59 @@ $(function() {
 
         "processing" : true,
         "serverSide" : true,	
-		"ajax": {
-			"url": "/plugin/home/pluginList",
-			"type": "POST",
-			"dataSrc": function(res) {
-				//var json = JSON.parse(res);
-				console.log("vcxcdsdsd");
-				var data = res.list;
-				return data;
-			}
+		"ajax": function(data, callback) {
+
+			var search  = $("#search_frm").serialize(); 
+			var params  = {
+							//page	:	this.api().page(),
+							page    :   $("#board_list").DataTable().page.info().page + 1,
+							search  :   search
+					    	}
+			return $.ajax({
+
+				url: "/plugin/home/pluginList",
+				type: "POST",
+				data: params,
+				dataType: "json",
+				contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
+				success: function(res) {
+					//var json = JSON.parse(res);
+					console.log("page : " + res.page);
+					console.log("data : " + res.list);
+					console.log("total : " + res.total);
+
+					var result = {
+									draw: data.draw,
+									data: res.list,
+									recordsTotal : res.total,
+									recordsFiltered : res.total
+								};
+				//	var total = res.total;
+					console.log("result.total : " + result.recordsTotal);
+					console.log("res.paging : " + res.paging);
+					console.log("res.pagingArr : " + res.pagingArr);
+
+					callback(result);
+
+					$("#recordsTotal").text(res.total);
+
+				}
+			});
+
 		},
         "columns" : [
-            {data : "idx" },
-            {data : "title" },
-            {data : "name"},
-            {data : "regdate"},     
-            {data : "cnt"}
+            {"data" : "idx" },
+            {"data" : "title" },
+            {"data" : "name"},
+            {"data" : "regdate"},     
+            {"data" : "cnt"}
         ]
 
 	});
 
 
 });
+
 
 
 

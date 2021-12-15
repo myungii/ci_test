@@ -161,7 +161,7 @@ $(document).ready(function() {
 			type : "POST",
 			data : { search : search, page : page},
 			dataType : 'text',
-			contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
+	  		contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 			success :function(data) {
 				var json = JSON.parse(data);
 
@@ -189,7 +189,7 @@ $(document).ready(function() {
 			var row = $("<tr/>").append(
 
 				$("<td/>").text(index-i),
-				$("<td/>").html("<a href ='/index.php/boardAjax/content?id="+ json[i].idx +"'>" + json[i].title + "</a>"),
+				$("<td/>").html("<a href ='/index.php/ajax/content/"+ json[i].idx +"'>" + json[i].title + "</a>"),
 				$("<td/>").text(json[i].name),
 				$("<td/>").text(json[i].regdate),
 				$("<td/>").text(json[i].cnt)

@@ -65,7 +65,7 @@ class Ajax_model extends CI_Model {
 
 			} else if($param['notice'] == 'N') {
 
-				$where[] .= 'notice = 0 ';
+				$where[] .= 'notice is null';
 
 			} 
 
@@ -128,6 +128,26 @@ class Ajax_model extends CI_Model {
     }
 
 
+    private function _increaseCnt($idx) {
+
+        if(!$idx)
+        {
+            return false;
+        }
+
+        $this->db   ->set('cnt', 'cnt+1', FALSE)
+                    ->where('idx', $idx)
+                    ->update('board');
+        
+        if($this->db->affected_rows() > 0)
+        {
+            return true;
+        } 
+
+        return false;
+    }
+
+
 	//파일 한 건 출력
     function fileLoad($boardId) {
 
@@ -140,6 +160,38 @@ class Ajax_model extends CI_Model {
 
         return $rowData;
         
+    }
+
+    //등록일 포맷 변경
+    static function setRegdate($date)
+    {
+        if(!$date)
+        {
+            return "";
+        }
+
+        return date("Y-m-d", strtotime($date));
+
+    }
+
+    //새글 표시
+    static function displayNew($regdate='')
+    {
+        //하루 단위
+        //$time		= strtotime($regdate);
+		//$today		= time();
+		//$result = (($today - $time)/60/60/24)*10;
+
+		$time = substr($regdate,0, 10);
+		$today = date("Y-m-d");
+
+        //if($result <= 1)
+        if($time == $today)
+        {
+            return " <span id='new'>new</span>";
+        }
+
+        return '';
     }
 
 

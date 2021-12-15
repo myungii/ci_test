@@ -46,11 +46,36 @@ class Home extends CI_Controller {
 
 	public function pluginList()
 	{
-		$curPage	= 1;
 		$rowsPage	= 10;
-		
+
+		//현재 페이지
+	    $curPage = ($this->input->post('page')) ? $this->input->post('page'):1;
+
+
+		$url		= $_SERVER['PHP_SELF'];
+		$link_url	= $_SERVER['QUERY_STRING'];
+
+
+		//검색
+		$parse = array();
+
+		if($this->input->post('search'))
+		{
+			parse_str($this->param['search'], $parse);
+			//$query = $this->input->post('search');
+		}
+
+		$query = array(
+						"title"		=> $parse['title;'],
+						"name"      => $parse['name;'],
+						"reg_start" => $parse['regstart;'],
+						"reg_end"   => $parse['regend'],
+						"notice"	=> $parse['notice']
+		);
+
+
 		//리스트 출력
-		$data = $this->ajax_model->get_view('', $curPage, $rowsPage);
+		$data = $this->ajax_model->get_view($query, $curPage, $rowsPage);
 
 		$list = array();
 
@@ -77,7 +102,7 @@ class Home extends CI_Controller {
 				"name"			=> $li->name,
 				"content"		=> $li->content,
 				"cnt"			=> $li->cnt,
-				"regdate"		=> $li->regdate,
+				"regdate"		=> ajax_model::setRegdate($li->regdate),
 				"fileid"		=> $li->fileid,
 				"notice"		=> $li->notice,
 				"modidate"		=> $li->modidate
@@ -87,7 +112,12 @@ class Home extends CI_Controller {
 
 		}
 
-		$result = array("list" => $list);
+		$total  = $this->ajax_model->getTotal($query);
+
+		$result = array("list"		=> $list, 
+						"page"		=> $curPage, 
+						"rowsPage"  => $rowsPage,  
+						"total"		=> $total);
 
 		$this->output->set_content_type('application/json');
 		$this->display($result);
