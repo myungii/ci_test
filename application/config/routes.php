@@ -40,6 +40,7 @@
 $route['default_controller'] = "home";
 $route['ajax'] = "boardAjax/home";
 $route['ajax/content/(:num)'] = "boardAjax/home/content/$1";
+$route['ajax/edit/(:num)'] = "boardAjax/edit/index/$1";
 $route['testcode'] = "code/test";
 $route['ajax_write'] = "boardAjax/write";
 $route['plugin'] = "plugin/home";

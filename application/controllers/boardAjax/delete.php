@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Content extends CI_Controller {
+class Delete extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -21,8 +21,8 @@ class Content extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
+		$this->load->model('Board_model');
 		$this->load->model('ajax/ajax_model');
-		$this->load->model('board_model');
 
 		//레이아웃 파일 설정
 		$this->layout = 'default';
@@ -30,38 +30,28 @@ class Content extends CI_Controller {
 		$this->left = 'left3' ;
 
 		$this->param = $this->input->post(NULL, true);
-        $this->temps_code_list = $this->config->item( 'temps_code' ); 
-		
+        $this->temps_code_list = $this->config->item( 'temps_code' ); //
+    }
 
-	}
-
-	public function index()
+    //삭제
+    public function index()
 	{
-
         $id = $this->input->get('id');
-        $data['content'] 	= $this->ajax_model->load($id);
 
-		if($this->ajax_model->fileLoad($id)) {
-			$fileInfo = $this->ajax_model->fileLoad($id);
+        $response = $this->ajax_model->delete($id);
+
+        if($response == true)
+        {
+            echo '<script>
+                    alert("삭제되었습니다.");
+                    location.replace("/ajax");
+                </script>';
+        } else {
+            echo '<script>
+                    alert("잠시 후 다시 시도해주세요.");
+                </script>';
+        }	
 			
-			$data['file_name']	= $fileInfo->fileName;
-			$data['file_idx']	= $fileInfo->idx;
-			
-		} else {
-			$data['file_name'] = '';
-			$data['file_idx']  = '';
-		}
-
-		
-
-
-		$this->load->view('boardAjax/content', 	$data);
-		
-		
 	}
-
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

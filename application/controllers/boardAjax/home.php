@@ -72,6 +72,9 @@ class Home extends CI_Controller {
 		//리스트 출력
 		$data = $this->ajax_model->get_view($query, $curPage, $rowsPage);
 
+		//공지글
+		$noticeView = $this->ajax_model->get_noticeView();
+
 		$list = array();
 
 		foreach($data as $li)
@@ -105,8 +108,9 @@ class Home extends CI_Controller {
 
 			$list[] = $row;
 
-
 		}
+
+
 
 		//레코드 갯수 출력
 		$total = $this->ajax_model->getTotal($query);
@@ -123,10 +127,12 @@ class Home extends CI_Controller {
 					"isAjax"    => 1
 
 		);
+
 		$paging = $this->paging->pageView($pagingArr);
 
 
 		$result = array( "list"			=> $list, 
+						 "notice_view"  => $noticeView,
 						 "total"		=> $total,
 						 "paging"		=> $paging,
 						 "pagingArr"	=> $pagingArr,

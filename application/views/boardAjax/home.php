@@ -78,7 +78,7 @@
         Total :
         <span class="f-bold"><strong><span id="recordsTotal"></span></strong>건</span>
         <div class="button-box">
-            <button class="btn btn-flat-blue" onclick="location.replace('/index.php/write');" style="float: left;">게시물 등록</button>
+            <button class="btn btn-flat-blue" onclick="location.replace('/index.php/boardAjax/write');" style="float: left;">게시물 등록</button>
         </div>
     </h3>
     
@@ -168,6 +168,7 @@ $(document).ready(function() {
 				$("input[name=p]").attr("value", json.p);
 				$("span#recordsTotal").text(json.total);
 				htmlData(json.list, json.page, json.total, json.pagingArr.rowsPage);
+			//	noticeData(json.notice_view);
 				paging(json.paging, json.page);
 			}
 			, error : function (request, status, error) {
@@ -201,6 +202,28 @@ $(document).ready(function() {
 
 
 	}
+
+
+/*
+	function noticeData(notice) {
+
+		     for(var i in notice)
+        {
+
+            var notice  = $("<tr/>").append(
+
+                $("<td/>").html("<b>공지</b>"),
+                $("<td/>").html("<a href ='/index.php/ajax/content/"+ notice[i].idx +"'>" + json[i].title + "</a>"),
+                $("<td/>").text(notice[i].name),
+                $("<td/>").text(notice[i].regdate),
+                $("<td/>").text(notice[i].cnt)
+
+            );
+
+
+	}
+*/
+
 
 	function paging(json, page) {
 
