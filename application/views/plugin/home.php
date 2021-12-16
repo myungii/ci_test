@@ -188,9 +188,6 @@ $(function() {
 				contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 				success: function(res) {
 					//var json = JSON.parse(res);
-					console.log("page : " + res.page);
-					console.log("data : " + res.list);
-					console.log("total : " + res.total);
 
 					var result = {
 									draw: data.draw,
@@ -199,9 +196,6 @@ $(function() {
 									recordsFiltered : res.total
 								};
 				//	var total = res.total;
-					console.log("result.total : " + result.recordsTotal);
-					console.log("res.paging : " + res.paging);
-					console.log("res.pagingArr : " + res.pagingArr);
 
 					callback(result);
 
@@ -211,13 +205,15 @@ $(function() {
 			});
 
 		},
-        "columns" : [
-            {"data" : "idx" },
-            {"data" : "title" },
-            {"data" : "name"},
-            {"data" : "regdate"},     
-            {"data" : "cnt"}
-        ]
+            "columns" : [
+                //{"data" : null, "render" : function (data, type, full, meta) { return meta.row + 1 ; } },
+                {"data" : "index"},
+                {"data" : "title" },
+                {"data" : "name"},
+                {"data" : "regdate"},     
+                {"data" : "cnt"}
+            ]
+        
 
 	});
 

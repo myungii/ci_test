@@ -79,7 +79,7 @@ class Home extends CI_Controller {
 
 		$list = array();
 
-		foreach($data as $li)
+		foreach($data as $key => $li)
 		{
 			if($li->fileid == null)
 			{
@@ -96,23 +96,25 @@ class Home extends CI_Controller {
 				$li->modidate = "";
 			}
 
-			$row = array (
-				"idx"			=> $li->idx,
-				"title"			=> $li->title,
-				"name"			=> $li->name,
-				"content"		=> $li->content,
-				"cnt"			=> $li->cnt,
-				"regdate"		=> ajax_model::setRegdate($li->regdate),
-				"fileid"		=> $li->fileid,
-				"notice"		=> $li->notice,
-				"modidate"		=> $li->modidate
-			);
-
-			$list[] = $row;
-
-		}
 
 		$total  = $this->ajax_model->getTotal($query);
+
+		$row = array (
+			"idx"			=> $li->idx,
+			"title"			=> $li->title,
+			"name"			=> $li->name,
+			"content"		=> $li->content,
+			"cnt"			=> $li->cnt,
+			"regdate"		=> ajax_model::setRegdate($li->regdate),
+			"fileid"		=> $li->fileid,
+			"notice"		=> $li->notice,
+			"modidate"		=> $li->modidate,
+			"index"  		=> $total - ($curPage-1) * $rowsPage - $key
+		);
+
+		$list[] = $row;
+
+	}
 
 		$result = array("list"		=> $list, 
 						"page"		=> $curPage, 

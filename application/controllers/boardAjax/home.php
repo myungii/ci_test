@@ -100,13 +100,46 @@ class Home extends CI_Controller {
 				"name"			=> $li->name,
 				"content"		=> $li->content,
 				"cnt"			=> $li->cnt,
-				"regdate"		=> $li->regdate,
+				"regdate"		=> ajax_model::setRegdate($li->regdate),
 				"fileid"		=> $li->fileid,
 				"notice"		=> $li->notice,
 				"modidate"		=> $li->modidate
 			);
 
 			$list[] = $row;
+
+		}
+
+		foreach($noticeView as $li)
+		{
+			if($li->fileid == null)
+			{
+				$li->filed = "";
+			}
+
+			if($li->notice == null)
+			{	
+				$li->notice = "";
+			}
+
+			if($li->modidate == null)
+			{
+				$li->modidate = "";
+			}
+
+			$row = array (
+				"idx"			=> $li->idx,
+				"title"			=> $li->title,
+				"name"			=> $li->name,
+				"content"		=> $li->content,
+				"cnt"			=> $li->cnt,
+				"regdate"		=> ajax_model::setRegdate($li->regdate),
+				"fileid"		=> $li->fileid,
+				"notice"		=> $li->notice,
+				"modidate"		=> $li->modidate
+			);
+
+			$notce_list[] = $row;
 
 		}
 
@@ -132,11 +165,18 @@ class Home extends CI_Controller {
 
 
 		$result = array( "list"			=> $list, 
-						 "notice_view"  => $noticeView,
+						 "notce_list"   => $notce_list,
 						 "total"		=> $total,
-						 "paging"		=> $paging,
+						 "current_block"=> $paging['current_block'],
+						 "current"		=> $paging['current'],
+						 "total_block"  => $paging['total_block'],
+						 "prev"  		=> $paging['prev'],
+						 "next"  		=> $paging['next'],
+						 "totalPage"  	=> $paging['totalPage'],
 						 "pagingArr"	=> $pagingArr,
+						 "rowsPage"		=> $rowsPage,
 						 "page"			=> $curPage);
+
 
 		$this->output->set_content_type('application/json');
 		$this->display($result);

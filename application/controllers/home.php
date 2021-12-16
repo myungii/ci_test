@@ -39,6 +39,7 @@ class Home extends CI_Controller {
 	public function index()
 	{
 
+
 		//검색
 		$searchText 		= isset($_GET['filter_name']) ? trim($_GET['filter_name']) : '';
 

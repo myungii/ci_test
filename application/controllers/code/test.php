@@ -50,20 +50,32 @@ class Test extends CI_Controller {
 		echo $a;
 		echo "<br>";
 
+		echo $b;
+		echo "<br>";
+		
+		echo $c;
+		echo "<br>";
 
 
 //문자열 검사
-		$chk1 = substr($a, 145, 10);
-		$chk2 = substr($a, 66, 14);
-		$chk3 = substr($c, 82, 12);
+		$chk1 	= substr($a, 198, 6);
+		$chk2 	= substr($b, 198, 6);
+		$chk3 	= substr($c, 198, 6);
+		$a_last = substr($a, 215, 3);
+		$b_last = substr($b, 215, 3);
+		$c_last = substr($c, 215, 3);
 
 
 		echo "chk1 결과 : " . $chk1 . "<br>";
 		echo "chk2 결과 : " . $chk2 . "<br>";
 		echo "chk3 결과 : " . $chk3 . "<br>";
+		echo "<br>";
+		echo "a_last 결과 : " . $chk3 . "<br>";
+		echo "b_last 결과 : " . $chk3 . "<br>";
+		echo "chc_lastk3 결과 : " . $chk3 . "<br>";
 
 //문자열 찾기
-		$findout1 = strpos($a, 'RK0600');
+		$findout1 = strpos($a, '0.38');
 		echo "문자열 찾기 결과 : " . $findout1 . "<br>";
 
 		

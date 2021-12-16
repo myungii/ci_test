@@ -116,4 +116,14 @@ class Write extends CI_Controller {
 
 
 
+	function ajaxPopup() {
+
+		
+		echo "200";
+		exit;
+
+	} //ajaxPopup end
+
+
+
 }

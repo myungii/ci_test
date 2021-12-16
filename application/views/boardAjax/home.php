@@ -1,4 +1,8 @@
 <head>
+    
+<link rel="stylesheet" type="text/css" href="/asset/popup/css/popup.css">
+<script src="/asset/popup/js/popup.js"></script>
+
     <style>
         #noticeList {
             font-weight : bold;
@@ -6,6 +10,7 @@
         #new {
             color : red;
         }
+
 
 		.ui-datepicker-trigger{cursor: pointer;}
 		.datepicker{cursor: pointer;} 
@@ -78,7 +83,7 @@
         Total :
         <span class="f-bold"><strong><span id="recordsTotal"></span></strong>건</span>
         <div class="button-box">
-            <button class="btn btn-flat-blue" onclick="location.replace('/index.php/boardAjax/write');" style="float: left;">게시물 등록</button>
+            <button class="btn btn-flat-blue" onclick="javascript:writePopup();" style="float: left;">게시물 등록</button>
         </div>
     </h3>
     
@@ -101,9 +106,11 @@
                 <th>조회수</th>
             </tr>
             </thead>
+            <tbody id="notice_list">
+  
+            </tbody>
+            
             <tbody id="board_list">
-                
-                    
             </tbody>
             
         </table>
@@ -113,43 +120,183 @@
         </ul>
         
         </div>
-    
 
 </div>
+
+<div id="dialog-form" title="글쓰기"></div>
 
 <!-- Contents -->
 
 <script type="text/javascript">
 
-        $(function() {
-            //모든 datepicker에 대한 공통 옵션 설정
-            $.datepicker.setDefaults({
-                dateFormat: 'yy-mm-dd' //Input Display Format 변경
-                ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-                ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-                ,changeYear: true //콤보박스에서 년 선택 가능
-                ,changeMonth: true //콤보박스에서 월 선택 가능                
-                ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-                ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-                ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-                ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-                ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-                ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-                ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-            });
- 
-            //input을 datepicker로 선언
-            $("#datepicker_start").datepicker();                    
-            $("#datepicker_end").datepicker();
-            //To의 초기값을 내일로 설정
-            $('#datepicker_end').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+$(function() {
+
+    //모든 datepicker에 대한 공통 옵션 설정
+    $.datepicker.setDefaults({
+        dateFormat: 'yy-mm-dd' //Input Display Format 변경
+        ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+        ,changeYear: true //콤보박스에서 년 선택 가능
+        ,changeMonth: true //콤보박스에서 월 선택 가능                
+        ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
+        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+        ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+        ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+        ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
+    });
+
+    //input을 datepicker로 선언
+    $("#datepicker_start").datepicker();                    
+    $("#datepicker_end").datepicker();
+    //To의 초기값을 내일로 설정
+    $('#datepicker_end').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+
+
+
+});
+
+
+var dialog, form;
+
+dialog = $( "#dialog-form" ).dialog({
+        autoOpen: false,
+        height: 800,
+        width: 1000,
+        modal: true,
+        buttons: {
+            
+            Cancel: function() {
+            dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+            //form[ 0 ].reset();
+            //allFields.removeClass( "ui-state-error" );
+        }
+});//dialog end
+
+
+function writePopup () {
+
+        $.ajax({
+            url : "/index.php/boardAjax/write/ajaxPopup",
+            type : "POST",
+            contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
+            success :function(data) {
+
+                console.log('성공 : ' + data);
+                popup_form();
+                dialog.dialog( "open" );
+
+                $('#summernote').summernote({
+                        height: 390,
+                        width: 920,              
+                        minHeight: 200,            
+                        maxHeight: 500, 
+                        focus: true,                  
+                        lang: "ko-KR",					
+                        placeholder: '내용을 입력해주세요.',	
+                        toolbar: [
+                            ['fontname', ['fontname']],
+                            ['fontsize', ['fontsize']],
+                            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                            ['color', ['forecolor', 'color']],
+                            ['table', ['table']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['height', ['height']],
+                            ['insert', ['picture', 'link', 'video']],
+                            ['view', ['fullscreen', 'help']]
+                        ],
+                        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체',
+                            '굴림', '돋음체', '바탕체'],
+                        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
+                            '50', '72']
+                 });
+                
+                        
+            }
+            , error : function (request, status, error) {
+                    console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
+
+            }
+
+        }); //ajax end
+
+        form = dialog.find("form").on("submit", function(event){
+            event.preventDefault();
+            //add_write();
         });
+
+} //writePopup end
+
+
+function popup_form() {
+
+        var frm = $("#dialog-form");
+
+    
+
+        frm.append('<form>' + 
+                        '<table class="table table-bordered table-list" style="width:900px">' +
+                        '<colgroup>' +
+                        '<col width="120px">' +
+                        '<col width="800px">' +
+                        '<col width="120px">' +
+                        '<col width="800px">' +
+                        '</colgroup>' +
+                        '<tbody>' +
+                        '<tr>' +
+                        '<th>이름</th><td><input type="text" name="name" id="name" style="width:785px;" value="" ></td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<th>제목</th><td><input type="text" name="title" value="" id="title"  style="width:785px;"></td>' +
+                        '</tr> ' +
+                        '<tr>' +
+                        '<th>공지여부</th>' +
+                        '<td style="text-align:start;">' +
+                        '<label class="hmis"> <input type="radio" name="notice" value="Y" class="hmis validate"> <span class="lbl">사용</span> </label>' +
+                        '<label class="hmis"> <input type="radio" name="notice" value="N" class="hmis validate" checked> <span class="lbl">미사용</span> </label>' +
+                        '</td>' +
+                        '</tr> ' +
+                        '<tr>' +
+                        '<th>파일</th> <td><input type="file" name="upload_file" value="" id="upload_file"  style="width:785px;"></td>' +
+                        '</tr>' +
+                        '</tbody>' +
+                        '</table>  <br>' +
+                        '<textarea id="summernote" name="editordata"></textarea>' +
+                        '<div class="area-button">' +
+                        '<button type="submit" name="save" class="btn btn-lg btn-theme" onclick="">저장</button>' +
+                        '<button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href=\'/\';">목록</button>' +
+                        '</div>' +
+                    '</form>'
+        );
+
+        //$("#dialog-form").append(row);
+
+        
+}
+
+//공백체크 및 데이터 넘기기 - 위에 주석 해제 해야함
+function add_write() {
+    var valid   = true;
+
+    var name    = $("input[name=name]");
+    var title   = $("input[name=title]");
+    var content = $("input[name=content]");
+    $("input[name=notice]:checked").each(function() {
+        var notice = $(this).val();
+    });
+}
 
 
 
 $(document).ready(function() {
 
 	load_data();
+
+    
 });
 
 	function load_data(search, page)
@@ -164,12 +311,13 @@ $(document).ready(function() {
 	  		contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
 			success :function(data) {
 				var json = JSON.parse(data);
-
+                                
 				$("input[name=p]").attr("value", json.p);
 				$("span#recordsTotal").text(json.total);
-				htmlData(json.list, json.page, json.total, json.pagingArr.rowsPage);
-			//	noticeData(json.notice_view);
-				paging(json.paging, json.page);
+                //noticeData(json.notce_list);
+				htmlData(json.list, json.page, json.total, json.rowsPage);
+			
+				paging(json.current_block, json.current, json.total_block, json.prev, json.next, json.totalPage, json.page);
 			}
 			, error : function (request, status, error) {
 					console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
@@ -209,33 +357,36 @@ $(document).ready(function() {
 
 		     for(var i in notice)
         {
-
+            console.log("notice ::::: " + notice[i].idx);
             var notice  = $("<tr/>").append(
 
                 $("<td/>").html("<b>공지</b>"),
-                $("<td/>").html("<a href ='/index.php/ajax/content/"+ notice[i].idx +"'>" + json[i].title + "</a>"),
+                $("<td/>").html("<a href ='/index.php/ajax/content/"+ notice[i].idx +"'>" + notice[i].title + "</a>"),
                 $("<td/>").text(notice[i].name),
                 $("<td/>").text(notice[i].regdate),
                 $("<td/>").text(notice[i].cnt)
 
             );
-
+            $("#notice_list").append(notice);
+            
+        }
 
 	}
+
 */
 
+	function paging(current_block, current, total_block, prev, next, totalPage, page) {
 
-	function paging(json, page) {
 
 		 $("ul.pagination").html('');
 
-           if (json.current_block > 2) {
+           if (current_block > 2) {
 				 $("ul.pagination").append("<li><a id='page-1' href='#'>◀</a></li>");
             }
-            if (json.current_block > 1) {
-				$("ul.pagination").append("<li><a id='" + json.prev + "' href='#'>◁</a></li>");
+            if (current_block > 1) {
+				$("ul.pagination").append("<li><a id='" + prev + "' href='#'>◁</a></li>");
 			}
-            for(var i=1; i<=json.current.length; i++) {
+            for(var i=1; i<=current.length; i++) {
 
                 if (page == i) {
 					$("ul.pagination").append("<li class='act'><a id='" + i + "' href='#'><span style='color:red;'>" + i + "</span></a></li>");
@@ -244,11 +395,11 @@ $(document).ready(function() {
 					 $("ul.pagination").append("<li><a id='" + i + "' href='#'>" + i + "</a></li>");
                 }
             }
-            if (json.current_block < (json.total_block)) {
-				$("ul.pagination").append("<li><a id='" + json.next + "' href='#'>▷</a></li>");
+            if (current_block < (total_block)) {
+				$("ul.pagination").append("<li><a id='" + next + "' href='#'>▷</a></li>");
             }
-            if (json.current_block < (json.total_block - 1)) {
-				 $("ul.pagination").append("<li><a id='" + json.totalPage + "' href='#'>▶</a></li>");
+            if (current_block < (total_block - 1)) {
+				 $("ul.pagination").append("<li><a id='" + totalPage + "' href='#'>▶</a></li>");
             }
 
 

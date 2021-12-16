@@ -38,6 +38,9 @@
        #comments {
      	                  padding-left : 20em;
       }
+
+
+
    </style>
 
 
@@ -103,5 +106,8 @@ $(function() {
   if(wrap_height > sideBar_height) { 
 	  $('.sideBar').css({'height':wrap_height + 'px'}); 
 	 }
+
+
+
 });	
 </script>

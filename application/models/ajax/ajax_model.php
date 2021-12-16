@@ -52,6 +52,13 @@ class Ajax_model extends CI_Model {
 		return $this->db->query($query)->result();
 	}
 
+    //공지 리스트 출력
+    function get_noticeView() {
+        $query = 'SELECT * FROM board WHERE notice != 0 or notice !=null';   
+
+        return $this->db->query($query)->result();
+    }
+
 	//where 절
 	private function _whereParam($param) {
 
