@@ -83,7 +83,7 @@
         Total :
         <span class="f-bold"><strong><span id="recordsTotal"></span></strong>건</span>
         <div class="button-box">
-            <button class="btn btn-flat-blue" onclick="javascript:writePopup();" style="float: left;">게시물 등록</button>
+            <button class="btn btn-flat-blue" onclick='dialog.dialog( "open" );'  style="float: left;">게시물 등록</button>
         </div>
     </h3>
     
@@ -123,7 +123,46 @@
 
 </div>
 
-<div id="dialog-form" title="글쓰기"></div>
+
+<!-- 글쓰기 팝업 -->
+<div id="dialog-form" title="글쓰기">
+
+	<form>
+		<div class="form-group">
+			<label for="wname" style="display:inline-block">이름</label>
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="wname" name="wname"  aria-describedby="emailHelp" placeholder="이름을 입력하세요.">
+			 </div>
+			 <div class="valid_notice" style="color:red"> </div>
+		</div>
+		<div class="form-group">
+			<label for="wtitle" style="display:inline-block">제목</label>
+			<input type="text" class="form-control" id="wtitle" name="wtitle" placeholder="제목을 입력하세요.">
+		</div>
+		<div class="form-check">
+			<label style="display:block">공지여부</label>
+			<input class="form-check-input" type="radio" name="wnotice" id="wnotice_N" value="N" checked>
+			<label class="form-check-label" style="display:inline-block" for="wnotice_N">
+				미사용
+			</label>
+			<input class="form-check-input" type="radio" name="wnotice" id="wnotice_Y" value="Y" >
+			<label class="form-check-label" style="display:inline-block" for="wnotice_Y">
+				사용
+			</label>
+		</div>
+		<br>
+		<div class="form-group">
+			<label for="wupload_file" style="display:inline-block">파일첨부</label>
+			<input type="file" class="form-control-file" name="wupload_file"  id="wupload_file">
+		</div>
+		<div class="form-group">
+			<textarea class="form-control" id="summernote" name="editoerdata" rows="3"></textarea>
+		</div>
+	</form>
+
+</div>
+
+
 
 <!-- Contents -->
 
@@ -154,6 +193,31 @@ $(function() {
     $('#datepicker_end').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 
 
+	//wirte form editor
+	$('#summernote').summernote({
+			height: 390,
+			width: 960,              
+			minHeight: 200,            
+			maxHeight: 500, 
+			focus: true,                  
+			lang: "ko-KR",					
+			placeholder: '내용을 입력해주세요.',	
+			toolbar: [
+				['fontname', ['fontname']],
+				['fontsize', ['fontsize']],
+				['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+				['color', ['forecolor', 'color']],
+				['table', ['table']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['height', ['height']],
+				['insert', ['picture', 'link', 'video']],
+				['view', ['fullscreen', 'help']]
+			],
+			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체',
+				'굴림', '돋음체', '바탕체'],
+			fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
+				'50', '72']
+	 }); //summernote end
 
 });
 
@@ -167,6 +231,21 @@ dialog = $( "#dialog-form" ).dialog({
         modal: true,
         buttons: {
             
+			Submit: function() {
+
+							var name			= $("input[name=wname]").val();
+							var title			= $("input[name=wtitle]").val();
+							var upload_file		= $("input[name=wupload_file]")[0].files[0];
+							var content			= $("#summernote").val();
+
+						$("input[name=wnotice]:checked").each(function() {
+							var notice = $(this).val();
+
+							add_write(name, title, content, notice, upload_file)
+
+						});
+			},
+
             Cancel: function() {
             dialog.dialog( "close" );
             }
@@ -178,43 +257,34 @@ dialog = $( "#dialog-form" ).dialog({
 });//dialog end
 
 
-function writePopup () {
+
+
+
+function writePopup(formData) {
+	
+console.log("writePopup : " + formData);
 
         $.ajax({
             url : "/index.php/boardAjax/write/ajaxPopup",
-            type : "POST",
-            contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
+            method : "POST",
+			data : formData,
+			dataType : "text",
+			//contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
+			contentType : false,
+			processData: false,
             success :function(data) {
 
                 console.log('성공 : ' + data);
-                popup_form();
-                dialog.dialog( "open" );
 
-                $('#summernote').summernote({
-                        height: 390,
-                        width: 920,              
-                        minHeight: 200,            
-                        maxHeight: 500, 
-                        focus: true,                  
-                        lang: "ko-KR",					
-                        placeholder: '내용을 입력해주세요.',	
-                        toolbar: [
-                            ['fontname', ['fontname']],
-                            ['fontsize', ['fontsize']],
-                            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                            ['color', ['forecolor', 'color']],
-                            ['table', ['table']],
-                            ['para', ['ul', 'ol', 'paragraph']],
-                            ['height', ['height']],
-                            ['insert', ['picture', 'link', 'video']],
-                            ['view', ['fullscreen', 'help']]
-                        ],
-                        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체',
-                            '굴림', '돋음체', '바탕체'],
-                        fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
-                            '50', '72']
-                 });
-                
+					if(data == "200") 
+					{
+						alert("저장되었습니다.");
+						location.replace("/index.php/ajax")
+					} 
+					else {
+						alert("오류발생");
+					}
+			
                         
             }
             , error : function (request, status, error) {
@@ -224,70 +294,40 @@ function writePopup () {
 
         }); //ajax end
 
-        form = dialog.find("form").on("submit", function(event){
-            event.preventDefault();
-            //add_write();
-        });
 
 } //writePopup end
 
 
-function popup_form() {
 
-        var frm = $("#dialog-form");
+//공백체크 및 데이터 넘기기 
+function add_write(name, title, content, notice, upload_file) {
 
-    
+		var arr		= [name, title, content];
+		var arr2	= ['이름', '제목', '내용'];
 
-        frm.append('<form>' + 
-                        '<table class="table table-bordered table-list" style="width:900px">' +
-                        '<colgroup>' +
-                        '<col width="120px">' +
-                        '<col width="800px">' +
-                        '<col width="120px">' +
-                        '<col width="800px">' +
-                        '</colgroup>' +
-                        '<tbody>' +
-                        '<tr>' +
-                        '<th>이름</th><td><input type="text" name="name" id="name" style="width:785px;" value="" ></td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<th>제목</th><td><input type="text" name="title" value="" id="title"  style="width:785px;"></td>' +
-                        '</tr> ' +
-                        '<tr>' +
-                        '<th>공지여부</th>' +
-                        '<td style="text-align:start;">' +
-                        '<label class="hmis"> <input type="radio" name="notice" value="Y" class="hmis validate"> <span class="lbl">사용</span> </label>' +
-                        '<label class="hmis"> <input type="radio" name="notice" value="N" class="hmis validate" checked> <span class="lbl">미사용</span> </label>' +
-                        '</td>' +
-                        '</tr> ' +
-                        '<tr>' +
-                        '<th>파일</th> <td><input type="file" name="upload_file" value="" id="upload_file"  style="width:785px;"></td>' +
-                        '</tr>' +
-                        '</tbody>' +
-                        '</table>  <br>' +
-                        '<textarea id="summernote" name="editordata"></textarea>' +
-                        '<div class="area-button">' +
-                        '<button type="submit" name="save" class="btn btn-lg btn-theme" onclick="">저장</button>' +
-                        '<button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href=\'/\';">목록</button>' +
-                        '</div>' +
-                    '</form>'
-        );
+		for(i=0; i<=arr.length; i++)
+		{
+			if(arr[i] == '')
+			{
+				alert(arr2[i] + '을(를) 입력해주세요.');
+				return false;
+			}
+		}
 
-        //$("#dialog-form").append(row);
+		let formData = new FormData();
+		
+		formData.append("name",         name);
+		formData.append("title",        title);
+		formData.append("content",      content);
+		formData.append("notice",       notice);
 
-        
-}
+		if(upload_file) {
+			formData.append("upload_file",  upload_file);
+		}
 
-//공백체크 및 데이터 넘기기 - 위에 주석 해제 해야함
-function add_write() {
-    var valid   = true;
+		writePopup(formData);
 
-    var name    = $("input[name=name]");
-    var title   = $("input[name=title]");
-    var content = $("input[name=content]");
-    $("input[name=notice]:checked").each(function() {
-        var notice = $(this).val();
-    });
+
 }
 
 

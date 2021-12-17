@@ -136,8 +136,8 @@ $(document).ready(function () {
                 data 	          : formData,
                 method          : "POST",
                 contentType     : false,
-		            cache           : false,
-		            processData     : false , 
+		        cache           : false,
+		        processData     : false , 
                 
                 success : function(r) { 
         

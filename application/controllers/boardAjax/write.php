@@ -46,14 +46,10 @@ class Write extends CI_Controller {
 
 
 
-	public function save() {
+	public function save($name, $title, $content, $notice) {
 		
 
 		//저장
-		$name		= $this->input->post('name');
-		$title		= $this->input->post('title');
-		$content	= $this->input->post('content');
-		$notice		= $this->input->post('notice');
 
 		if($notice == 'Y')
 		{
@@ -68,7 +64,7 @@ class Write extends CI_Controller {
 					'content' 	=> $content,
 					'notice' 	=> $notice
 			);
-		$result = $this->Board_model->add($data);
+		$result = $this->ajax_model->add($data);
 		$lastId = (int)$this->db->insert_id();
 
 
@@ -96,7 +92,7 @@ class Write extends CI_Controller {
 								'fullFilePath'	=> $fileInfo['full_path']
 						);
 			
-			$this->Board_model->fileUpload($fileData);
+			$this->ajax_model->fileUpload($fileData);
 			
 		} 
 
@@ -118,9 +114,15 @@ class Write extends CI_Controller {
 
 	function ajaxPopup() {
 
-		
-		echo "200";
-		exit;
+		$name		= $_POST['name'];
+		$title		= $this->input->post('title');
+		$content	= $this->input->post('content');
+		$notice		= $this->input->post('notice');
+
+		if($name && $title && $content && $notice) {
+
+			$this->save($name, $title, $content, $notice);
+		}
 
 	} //ajaxPopup end
 

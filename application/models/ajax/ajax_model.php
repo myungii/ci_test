@@ -102,6 +102,59 @@ class Ajax_model extends CI_Model {
 	}
 
 
+    //추가
+    function add($data = array()) {
+        if($data <= 0)
+       {
+            return false;
+       }
+
+        $data['regdate']    = date("Y-m-d H:i:s");
+
+        $this->db->insert('board', $data);
+
+        if($this->db->affected_rows())
+        {
+            return true;
+        }
+        
+	}
+
+    //파일 업로드
+    function fileUpload($data) {
+        
+        if(!$data)
+        {
+            return false;
+        } else {
+
+            $data['regdate']    = date("Y-m-d H:i:s");
+
+			$this->db->insert('board_file', $data);
+			return true;
+		}
+        
+    }
+
+
+    //삭제
+    function delete($idx) {
+        if($idx)
+        {
+            $this->db->where('idx', $idx);
+            $this->db->delete('board');
+
+            if($this->db->affected_rows() > 0)
+            {
+                return true;
+            } 
+            
+        }
+
+        return false;
+	}
+
+
 
     //총 게시글 개수
     function getTotal($param) {
