@@ -127,5 +127,92 @@ class Write extends CI_Controller {
 	} //ajaxPopup end
 
 
+	//수정
+	function editPopup() {
+
+		$name		= $_POST['name'];
+		$idx		= $_POST['idx'];
+		$title		= $this->input->post('title');
+		$content	= $this->input->post('content');
+		$notice		= $this->input->post('notice');
+		$old_file   = $this->input->post('old_file');
+
+		if($name && $title && $content && $notice) {
+
+			$this->editSave($idx, $name, $title, $content, $notice, $old_file);
+		}
+
+
+
+	} //editPopup end
+
+
+	function editSave($idx, $name, $title, $content, $notice, $old_file) {
+
+		//수정
+
+		if(!$old_file)
+		{
+			$old_file = '';
+		}
+
+		if($notice == 'Y')
+		{
+			$notice = 1;
+		} else {
+			$notice = 0;
+		}
+
+		$data = array(
+					'idx'		=> $idx,
+					'name' 		=> $name,
+					'title' 	=> $title,
+					'content' 	=> $content,
+					'notice' 	=> $notice
+			);
+
+
+		$boardResult = $this->ajax_model->modify($data);
+
+
+
+		if($old_file) {
+
+			//기존 파일 삭제
+			$oldDel = $this->ajax_model->fileDelete($old_file);
+
+		}
+
+		//파일 업로드 및 저장
+		$config['upload_path'] 		= './uploads';
+		$config['allowed_types']	= 'gif|jpg|png';
+		$config['max_size']			= '0';
+		$config['max_width']		= '0';
+		$config['max_height']		= '0';
+
+		$this->load->library('upload', $config);
+		if($this->upload->do_upload('upload_file') == true) {
+			
+			$fileInfo =  $this->upload->data();
+			
+			$fileData = array(
+								'boardId' 		=> $data['idx'],
+								'fileName' 		=> $fileInfo['file_name'],
+								'fileSize'		=> intval($fileInfo['file_size']),
+								'filePath'		=> $fileInfo['file_path'],
+								'fileType'		=> $fileInfo['file_type'],
+								'fullFilePath'	=> $fileInfo['full_path']
+						);
+			
+			$result = $this->ajax_model->fileUpload($fileData);
+			
+			echo "1";
+		   
+		}
+
+
+	} //editSave end
+
+
 
 }

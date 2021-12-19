@@ -137,6 +137,44 @@ class Ajax_model extends CI_Model {
     }
 
 
+    //수정
+    function modify($data = array()) {
+
+        $dataArr    = array();
+        $where      = array (
+                        "idx" => $data['idx']
+        );
+
+            $dataArr['name']         = $data['name'];
+            $dataArr['title']        = $data['title'];
+            $dataArr['content']      = $data['content'];
+            $dataArr['notice']       = $data['notice'];
+            $dataArr['regdate']      = date("Y-m-d H:i:s");
+
+           if($this->db->update('board', $dataArr, $where)) return TRUE ;
+           return FALSE;
+    
+    }
+
+
+    //파일 삭제
+    function fileDelete($idx) {
+        if($idx)
+        {
+            $this->db->where('idx', $idx);
+            $this->db->delete('board_file');
+
+            if($this->db->affected_rows() > 0)
+            {
+                return true;
+            } 
+            
+        }
+
+        return false;
+	}
+
+
     //삭제
     function delete($idx) {
         if($idx)

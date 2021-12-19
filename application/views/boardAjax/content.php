@@ -91,6 +91,7 @@
 <div id="dialog-form" title="글쓰기">
 
 	<form>
+		<input type="hidden" name="widx" value="<?= $content->idx ?>">
 		<div class="form-group">
 			<label for="wname" style="display:inline-block">이름</label>
 			 <div class="col-sm-10">
@@ -117,6 +118,7 @@
 		<div class="form-group">
 			<label for="wupload_file" style="display:inline-block">파일첨부</label>
 			<input type="file" class="form-control-file" name="wupload_file" value="<?= $file_name ?>"  id="wupload_file">
+			<input type="hidden" name="wfile_idx" value="<?= $file_idx ?>"  id="wfile_idx">
 		</div>
 		<div class="form-group">
 			<textarea class="form-control" id="summernote" name="editoerdata" rows="3"><?= $content->content ?></textarea>
@@ -178,15 +180,17 @@ dialog = $( "#dialog-form" ).dialog({
             
 			Submit: function() {
 
+							var idx			    = $("input[name=widx]").val();
 							var name			= $("input[name=wname]").val();
 							var title			= $("input[name=wtitle]").val();
 							var upload_file		= $("input[name=wupload_file]")[0].files[0];
 							var content			= $("#summernote").val();
+							var old_file		= $("input[name=wfile_idx]").val();
 
 						$("input[name=wnotice]:checked").each(function() {
 							var notice = $(this).val();
 
-							add_write(name, title, content, notice, upload_file)
+							edit_write(idx, name, title, content, notice, upload_file, old_file)
 
 						});
 			},
@@ -203,7 +207,7 @@ dialog = $( "#dialog-form" ).dialog({
 
 
 
-function writePopup(formData) {
+function editPopup(formData, idx) {
 	
 console.log("writePopup : " + formData);
 
@@ -213,16 +217,16 @@ console.log("writePopup : " + formData);
 			data : formData,
 			dataType : "text",
 			//contentType : 'application/x-www-form-urlencoded; charset=euc-kr json',
-			contentType : false,
+			contentType :false,
 			processData: false,
             success :function(data) {
 
                 console.log('성공 : ' + data);
 
-					if(data == "200") 
+					if(data != '') 
 					{
 						alert("저장되었습니다.");
-						location.replace("/index.php/ajax")
+						location.replace("/index.php/ajax/content/" + idx)
 					} 
 					else {
 						alert("오류발생");
@@ -243,7 +247,7 @@ console.log("writePopup : " + formData);
 
 
 //공백체크 및 데이터 넘기기 
-function edit_write(name, title, content, notice, upload_file) {
+function edit_write(idx, name, title, content, notice, upload_file, old_file) {
 
 		var arr		= [name, title, content];
 		var arr2	= ['이름', '제목', '내용'];
@@ -259,16 +263,18 @@ function edit_write(name, title, content, notice, upload_file) {
 
 		let formData = new FormData();
 		
+		formData.append("idx",          idx);
 		formData.append("name",         name);
 		formData.append("title",        title);
 		formData.append("content",      content);
 		formData.append("notice",       notice);
+		formData.append("old_file",     old_file);
 
 		if(upload_file) {
 			formData.append("upload_file",  upload_file);
 		}
 
-		editPopup(formData);
+		editPopup(formData, idx);
 
 
 }
