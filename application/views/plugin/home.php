@@ -171,7 +171,7 @@ $(function() {
 
         "processing" : true,
         "serverSide" : true,	
-		"ajax": function(data, callback) {
+		"ajax": function(data, callback, settings) {
 
 			var search  = $("#search_frm").serialize(); 
 			var params  = {
@@ -195,7 +195,6 @@ $(function() {
 									recordsTotal : res.total,
 									recordsFiltered : res.total
 								};
-				//	var total = res.total;
 
 					callback(result);
 
@@ -208,7 +207,13 @@ $(function() {
             "columns" : [
                 //{"data" : null, "render" : function (data, type, full, meta) { return meta.row + 1 ; } },
                 {"data" : "index"},
-                {"data" : "title" },
+//				{"data" : "title"},
+                {"data" : "title", render: function(data, type, row, meta) {
+												if(type == 'display') {
+													return  '<a href="index.php/plugin/content/'+ row.idx +'">' + row.title + '</a>';	
+												}
+											}
+				},
                 {"data" : "name"},
                 {"data" : "regdate"},     
                 {"data" : "cnt"}

@@ -24,6 +24,7 @@ class Home extends CI_Controller {
 		$this->load->model('board_model');
 		$this->load->model('ajax/ajax_model');
 		$this->load->model('/pagination/paging');
+		$this->load->model('Reply_model');
 
 
 		//레이아웃 파일 설정
@@ -125,6 +126,41 @@ class Home extends CI_Controller {
 		$this->display($result);
 
 	}
+
+
+	public function content($num) 
+	{
+		$id = intval($num);	
+
+        //$id = $this->input->get('id');
+        $data['content'] 	= $this->ajax_model->load($id);
+
+		if($this->ajax_model->fileLoad($id)) {
+			$fileInfo = $this->ajax_model->fileLoad($id);
+			
+			$data['file_name']	= $fileInfo->fileName;
+			$data['file_idx']	= $fileInfo->idx;
+			
+		} else {
+			$data['file_name'] = '';
+			$data['file_idx']  = '';
+		}
+
+		
+
+		$data['pid'] 		= $id;
+		$data['reply']		= $this->Reply_model->get_view($id);
+		$data['total']		= $this->Reply_model->getTotal($id);
+
+		
+
+
+		$this->load->view('plugin/content', 	$data);
+		
+
+
+	}
+
 
 
 	public function save() {/*{{{*/
