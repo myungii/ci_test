@@ -43,7 +43,7 @@
 		
         <tbody>
             <tr>
-                <th>재목</th>
+                <th>제목</th>
                 <td>
                     <input type="text" name='title' class="form-control input-xsm"   value="" autocomplete="off">
                 </td>
@@ -120,6 +120,47 @@
     </form>
 
 </div>
+
+
+<!-- 글쓰기 팝업 -->
+<div id="dialog-form" title="글쓰기">
+
+	<form>
+		<div class="form-group">
+			<label for="wname" style="display:inline-block">이름</label>
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="wname" name="wname"  aria-describedby="emailHelp" placeholder="이름을 입력하세요.">
+			 </div>
+			 <div class="valid_notice" style="color:red"> </div>
+		</div>
+		<div class="form-group">
+			<label for="wtitle" style="display:inline-block">제목</label>
+			<input type="text" class="form-control" id="wtitle" name="wtitle" placeholder="제목을 입력하세요.">
+		</div>
+		<div class="form-check">
+			<label style="display:block">공지여부</label>
+			<input class="form-check-input" type="radio" name="wnotice" id="wnotice_N" value="N" checked>
+			<label class="form-check-label" style="display:inline-block" for="wnotice_N">
+				미사용
+			</label>
+			<input class="form-check-input" type="radio" name="wnotice" id="wnotice_Y" value="Y" >
+			<label class="form-check-label" style="display:inline-block" for="wnotice_Y">
+				사용
+			</label>
+		</div>
+		<br>
+		<div class="form-group">
+			<label for="wupload_file" style="display:inline-block">파일첨부</label>
+			<input type="file" class="form-control-file" name="wupload_file"  id="wupload_file">
+		</div>
+		<div class="form-group">
+			<textarea class="form-control" id="summernote" name="editoerdata" rows="3"></textarea>
+		</div>
+	</form>
+
+</div>
+
+
 <!-- Contents -->
 <script type="text/javascript">
 
@@ -148,6 +189,119 @@
         });
 
 
+
+//글쓰기 핍업
+var dialog, form;
+
+dialog = $( "#dialog-form" ).dialog({
+        autoOpen: false,
+        height: 800,
+        width: 1000,
+        modal: true,
+        buttons: {
+            
+			Submit: function() {
+
+							var name			= $("input[name=wname]").val();
+							var title			= $("input[name=wtitle]").val();
+							var upload_file		= $("input[name=wupload_file]")[0].files[0];
+							var content			= $("#summernote").val();
+
+						$("input[name=wnotice]:checked").each(function() {
+							var notice = $(this).val();
+
+							add_write(name, title, content, notice, upload_file)
+
+						});
+			},
+
+            Cancel: function() {
+            dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+            //form[ 0 ].reset();
+            //allFields.removeClass( "ui-state-error" );
+        }
+});//dialog end
+
+
+
+
+
+function writePopup(formData) {
+	
+console.log("writePopup : " + formData);
+
+        $.ajax({
+            url : "/index.php/plugin/write/ajaxPopup",
+            method : "POST",
+			data : formData,
+			dataType : "text",
+			contentType : false,
+			processData: false,
+            success :function(data) {
+
+                console.log('성공 : ' + data);
+
+					if(data == "200") 
+					{
+						alert("저장되었습니다.");
+						location.replace("/index.php/ajax")
+					} 
+					else {
+						alert("오류발생");
+					}
+			
+                        
+            }
+            , error : function (request, status, error) {
+                    console.log('error 발생 : ' + request + '   ' + status + '   ' + error);
+
+            }
+
+        }); //ajax end
+
+
+} //writePopup end
+
+
+
+//공백체크 및 데이터 넘기기 
+function add_write(name, title, content, notice, upload_file) {
+
+		var arr		= [name, title, content];
+		var arr2	= ['이름', '제목', '내용'];
+
+		for(i=0; i<=arr.length; i++)
+		{
+			if(arr[i] == '')
+			{
+				alert(arr2[i] + '을(를) 입력해주세요.');
+				return false;
+			}
+		}
+
+		let formData = new FormData();
+		
+		formData.append("name",         name);
+		formData.append("title",        title);
+		formData.append("content",      content);
+		formData.append("notice",       notice);
+
+		if(upload_file) {
+			formData.append("upload_file",  upload_file);
+		}
+
+		writePopup(formData);
+
+
+}
+
+
+
+
+//dataTables list
 var board_list;
 
 $(function() {
@@ -207,11 +361,8 @@ $(function() {
             "columns" : [
                 //{"data" : null, "render" : function (data, type, full, meta) { return meta.row + 1 ; } },
                 {"data" : "index"},
-//				{"data" : "title"},
-                {"data" : "title", render: function(data, type, row, meta) {
-												if(type == 'display') {
+                {"data" : null, "render": function(data, type, row, meta) {
 													return  '<a href="index.php/plugin/content/'+ row.idx +'">' + row.title + '</a>';	
-												}
 											}
 				},
                 {"data" : "name"},
