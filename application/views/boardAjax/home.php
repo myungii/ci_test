@@ -355,7 +355,7 @@ $(document).ready(function() {
 				$("input[name=p]").attr("value", json.p);
 				$("span#recordsTotal").text(json.total);
                 //noticeData(json.notce_list);
-				htmlData(json.list, json.page, json.total, json.rowsPage);
+				htmlData(json.list, json.page, json.total, json.rowsPage, json.notce_list);
 			
 				paging(json.current_block, json.current, json.total_block, json.prev, json.next, json.totalPage, json.page);
 			}
@@ -369,16 +369,33 @@ $(document).ready(function() {
 	}
 
 
-	function htmlData(json, page, total, rowsPage) {
+	function htmlData(json, page, total, rowsPage, notice) {
 		var index = total - (page - 1) * rowsPage;
+		var row = '';
+
+
+        for(var n in notice)
+        {
+
+             row = $("<tr/>").append(
+
+                $("<td/>").html("<b>공지</b>"),
+                $("<td/>").html("<a href ='/index.php/ajax/content/"+ notice[n].idx +"'>" + notice[n].title + notice[n].new + "</a>"),
+                $("<td/>").text(notice[n].name),
+                $("<td/>").text(notice[n].regdate),
+                $("<td/>").text(notice[n].cnt)
+            );
+            $("#board_list").append(row);
+        }
+
 
 		for(var i in json)
 		{
 
-			var row = $("<tr/>").append(
+			 row = $("<tr/>").append(
 
 				$("<td/>").text(index-i),
-				$("<td/>").html("<a href ='/index.php/ajax/content/"+ json[i].idx +"'>" + json[i].title + "</a>"),
+				$("<td/>").html("<a href ='/index.php/ajax/content/"+ json[i].idx +"'>" + json[i].title + json[i].new + "</a>"),
 				$("<td/>").text(json[i].name),
 				$("<td/>").text(json[i].regdate),
 				$("<td/>").text(json[i].cnt)
@@ -392,28 +409,6 @@ $(document).ready(function() {
 	}
 
 
-/*
-	function noticeData(notice) {
-
-		     for(var i in notice)
-        {
-            console.log("notice ::::: " + notice[i].idx);
-            var notice  = $("<tr/>").append(
-
-                $("<td/>").html("<b>공지</b>"),
-                $("<td/>").html("<a href ='/index.php/ajax/content/"+ notice[i].idx +"'>" + notice[i].title + "</a>"),
-                $("<td/>").text(notice[i].name),
-                $("<td/>").text(notice[i].regdate),
-                $("<td/>").text(notice[i].cnt)
-
-            );
-            $("#notice_list").append(notice);
-            
-        }
-
-	}
-
-*/
 
 	function paging(current_block, current, total_block, prev, next, totalPage, page) {
 

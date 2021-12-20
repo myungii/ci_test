@@ -12,17 +12,19 @@
 
             <li><a href="/ajax"  class="">Ajax 게시판
                   
+                  <?php if(Board_model::newCnt() > 0) { ?>
                         <span class="badge  " style="background:#eb2c2c" data-toggle="tooltip" title="새글" style="width:25px;height:14px;" >
-                            
+                            <?= Board_model::newCnt() ?>
                         </span>
-                   
+                  <?php } ?> 
             </a></li>
 
             <li><a href="/plugin"  class="">Plugin 게시판
+                  <?php if(Board_model::newCnt() > 0) { ?>
                         <span class="badge  " style="background:#eb2c2c" data-toggle="tooltip" title="새글" style="width:25px;height:14px;" >
-
+                            <?= Board_model::newCnt() ?>
                         </span>
-                   
+                  <?php } ?> 
             </a></li>
 
         </ul>

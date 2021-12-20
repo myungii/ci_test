@@ -70,7 +70,10 @@ function showComment(currentVal, nameVal, pid) {
  
 
     //수정버튼
-    $("#comment-edit-"+rid).on("click", function() {
+	
+    $(".comment-edit").each(function(i) {
+		
+		$(this).click(function(e) {
 
         if($('#editSubmit').css("display") == "none")
         {
@@ -79,21 +82,22 @@ function showComment(currentVal, nameVal, pid) {
         } 
         
 
-        const replyId       = document.querySelector("#reply-id"); 
+        //const replyId       = document.querySelector("#reply-id"); 
+        const replyId       = $(this).attr('id'); 
         
-        const name      = document.getElementById('reply-name').innerText;
-        const content   =  document.getElementById('reply-content').innerHTML;
+        const name      = document.getElementById('reply-name-'+replyId).innerText;
+        const content   =  document.getElementById('reply-content-'+replyId).innerHTML;
 
 
         $("input[name=comment-name]").attr('value', name);
         $("input[name=comment-input]").attr('value', content);
+	
 
             $("#editSubmit").on("click", function() {
 
                 const name_form     = $("input[name=comment-name]").val();
                 const comment_form  = $("input[name=comment-input]").val();
 
-            
                         if(name_form == "")
                         {
                             alert("이름을 입력해주세요");
@@ -109,7 +113,7 @@ function showComment(currentVal, nameVal, pid) {
                             $.ajax({
                                 url             : "/index.php/reply/modify",
                                 data		    : {
-                                                    replyId     : replyId.value,
+                                                    replyId     : replyId,
                                                     name        : name_form,
                                                     content     : comment_form
                                                 },
@@ -139,37 +143,43 @@ function showComment(currentVal, nameVal, pid) {
                         } //else end
 
                 });
+		});
            
     });
 
 
     //삭제버튼
-    $("#comment-delete").on("click", function (e) { 
-        e.preventDefault();
+    $(".comment-delete").each(function(i) {
+		
+		$(this).click(function(e) {
 
-        const replyId   = document.querySelector("#reply-id");    
-        
-        $.ajax({
-            url             : "/index.php/reply/delete",
-            data		    : {replyId : replyId.value},
-            method          : "GET",
-            success : function(r) { 
-                const obj = $.parseJSON(r);
-                console.log('obj : ' + obj.is_valid);
+			e.preventDefault();
 
-                if(obj.is_valid == "1") { 
-                    alert("삭제되었습니다.");
-                    location.replace('/index.php/content?id='+ pid);
-                    
-                } else {
-                    alert("오류발생.");
-                    
-                }
-            }, error : function( jqxhr , status , error ){
-                console.log( jqxhr , status , error );
-            }
-  
-        }); //ajax end
+//			const replyId   = document.querySelector("#reply-id");    
+			const replyId   = $(this).attr('id');
+			
+			$.ajax({
+				url             : "/index.php/reply/delete",
+				data		    : {replyId : replyId},
+				method          : "GET",
+				success : function(r) { 
+					const obj = $.parseJSON(r);
+					console.log('obj : ' + obj.is_valid);
+
+					if(obj.is_valid == "1") { 
+						alert("삭제되었습니다.");
+						location.replace('/index.php/content?id='+ pid);
+						
+					} else {
+						alert("오류발생.");
+						
+					}
+				}, error : function( jqxhr , status , error ){
+					console.log( jqxhr , status , error );
+				}
+	  
+			}); //ajax end
+		});
         
     });
 

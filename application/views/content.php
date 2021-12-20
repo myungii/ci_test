@@ -70,12 +70,12 @@
         <div id="comment-list">댓글목록</div>
 		<?php foreach($reply as $list) { ?>
             <input type="hidden" id="reply-id" value="<?= $list->idx ?>">
-			<div class="comment-name" id="reply-name"><b><?= $list->name ?></b></div>
+			<div class="comment-name" id="reply-name-<?= $list->idx ?>"><b><?= $list->name ?></b></div>
 			<span class="eachComment" id="reply-content-<?= $list->idx ?>"><?= $list->content ?> </span> <!-- dap_to_comt_edit -->
 			<div class="time" id="reply-date"><?= $list->regdate ?></div> <!-- rep_me_dap_to -->
                   <div class="comment-menu"> <!-- rep_me rep_menu -->
-                        <a class="comment-edit" id="comment-edit-<?= $list->idx ?>" href="#">수정 </a> <!-- dat_edit_bt -->
-                        <a class="comment-delete" id="comment-delete" href="#">삭제</a> <!-- dat_delete_bt -->
+                        <a class="comment-edit" id="<?= $list->idx ?>" href="#">수정 </a> <!-- dat_edit_bt -->
+                        <a class="comment-delete" id="<?= $list->idx ?>" href="#">삭제</a> <!-- dat_delete_bt -->
                   </div>
 		<?php }	?>
 	  </div>

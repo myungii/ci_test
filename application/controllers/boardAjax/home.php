@@ -103,7 +103,8 @@ class Home extends CI_Controller {
 				"regdate"		=> ajax_model::setRegdate($li->regdate),
 				"fileid"		=> $li->fileid,
 				"notice"		=> $li->notice,
-				"modidate"		=> $li->modidate
+				"modidate"		=> $li->modidate,
+				"new"			=> Ajax_model::displayNew($li->regdate)
 			);
 
 			$list[] = $row;
@@ -136,7 +137,8 @@ class Home extends CI_Controller {
 				"regdate"		=> ajax_model::setRegdate($li->regdate),
 				"fileid"		=> $li->fileid,
 				"notice"		=> $li->notice,
-				"modidate"		=> $li->modidate
+				"modidate"		=> $li->modidate,
+				"new"			=> Ajax_model::displayNew($li->regdate)
 			);
 
 			$notce_list[] = $row;
@@ -187,6 +189,7 @@ class Home extends CI_Controller {
 	}
 
 
+	//상세보기
 	public function content($num) 
 	{
 		$id = intval($num);	

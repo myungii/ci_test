@@ -78,6 +78,9 @@ class Home extends CI_Controller {
 		//리스트 출력
 		$data = $this->ajax_model->get_view($query, $curPage, $rowsPage);
 
+		//공지글
+		$noticeView = $this->ajax_model->get_noticeView();
+
 		$list = array();
 
 		foreach($data as $key => $li)
@@ -100,6 +103,7 @@ class Home extends CI_Controller {
 
 		$total  = $this->ajax_model->getTotal($query);
 
+
 		$row = array (
 			"idx"			=> $li->idx,
 			"title"			=> $li->title,
@@ -110,17 +114,55 @@ class Home extends CI_Controller {
 			"fileid"		=> $li->fileid,
 			"notice"		=> $li->notice,
 			"modidate"		=> $li->modidate,
-			"index"  		=> $total - ($curPage-1) * $rowsPage - $key
+			"index"  		=> $total - ($curPage-1) * $rowsPage - $key,
+			"new"			=> Ajax_model::displayNew($li->regdate)
 		);
 
 		$list[] = $row;
 
 	}
 
-		$result = array("list"		=> $list, 
-						"page"		=> $curPage, 
-						"rowsPage"  => $rowsPage,  
-						"total"		=> $total);
+
+		foreach($noticeView as $li)
+		{
+			if($li->fileid == null)
+			{
+				$li->filed = "";
+			}
+
+			if($li->notice == null)
+			{	
+				$li->notice = "";
+			}
+
+			if($li->modidate == null)
+			{
+				$li->modidate = "";
+			}
+
+			$row = array (
+				"idx"			=> $li->idx,
+				"title"			=> $li->title,
+				"name"			=> $li->name,
+				"content"		=> $li->content,
+				"cnt"			=> $li->cnt,
+				"regdate"		=> ajax_model::setRegdate($li->regdate),
+				"fileid"		=> $li->fileid,
+				"notice"		=> $li->notice,
+				"modidate"		=> $li->modidate,
+			    "new"			=> Ajax_model::displayNew($li->regdate)
+			);
+
+			$notce_list[] = $row;
+
+		}
+
+
+		$result = array("list"		  => $list, 
+						"notice_list" => $notce_list,
+						"page"		  => $curPage, 
+						"rowsPage"    => $rowsPage,  
+						"total"		  => $total);
 
 		$this->output->set_content_type('application/json');
 		$this->display($result);

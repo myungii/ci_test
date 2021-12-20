@@ -25,6 +25,10 @@
     .table-adjehyu input[type=checkbox].hmis + .lbl::before{margin-right: 0;}
     .table-adjehyu label.hmis{margin-right: 0; display: inline-block;}
     .table > tbody > tr > td, .table > tbody > tr > th, .table > thead > tr > th{padding:6px;}
+
+
+
+    #new { color : red; } 
 </style>
 
 <!-- //subTitle -->
@@ -344,8 +348,9 @@ $(function() {
 					//var json = JSON.parse(res);
 
 					var result = {
-									draw: data.draw,
+									draw: res.draw,
 									data: res.list,
+									notice : res.notice_list,
 									recordsTotal : res.total,
 									recordsFiltered : res.total
 								};
@@ -358,11 +363,12 @@ $(function() {
 			});
 
 		},
-            "columns" : [
+            "columns" : 
+			[
                 //{"data" : null, "render" : function (data, type, full, meta) { return meta.row + 1 ; } },
                 {"data" : "index"},
                 {"data" : null, "render": function(data, type, row, meta) {
-													return  '<a href="index.php/plugin/content/'+ row.idx +'">' + row.title + '</a>';	
+													return  '<a href="index.php/plugin/content/'+ row.idx +'">' + row.title + '</a>' + row.new;	
 											}
 				},
                 {"data" : "name"},
@@ -372,6 +378,7 @@ $(function() {
         
 
 	});
+
 
 
 });
