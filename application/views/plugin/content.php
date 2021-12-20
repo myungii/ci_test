@@ -51,7 +51,7 @@
         <div class="area-button">
             <button type="button" class="btn btn-gray btn-lg modal-close" onclick="location.href='/plugin';">목록</button>
             <button type="button" class="btn btn-lg btn-theme" onclick="dialog.dialog( 'open' );">수정</button>
-            <button type="button" class="btn btn-lg" onclick="location.replace('/index.php/boardAjax/delete?id=<?=$content->idx?>')">삭제</button>
+            <button type="button" class="btn btn-lg" onclick="location.replace('/index.php/plugin/delete?id=<?=$content->idx?>')">삭제</button>
         </div>
 
     </form>
@@ -226,7 +226,7 @@ console.log("writePopup : " + formData);
 					if(data != '') 
 					{
 						alert("저장되었습니다.");
-						location.replace("/index.php/ajax/content/" + idx)
+						location.replace("/index.php/plugin/content/" + idx)
 					} 
 					else {
 						alert("오류발생");

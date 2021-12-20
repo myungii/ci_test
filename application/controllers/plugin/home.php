@@ -76,7 +76,7 @@ class Home extends CI_Controller {
 
 
 		//리스트 출력
-		$data = $this->ajax_model->get_view($query, $curPage, $rowsPage);
+		$data = $this->ajax_model->pluginList($query, $curPage, $rowsPage);
 
 		//공지글
 		$noticeView = $this->ajax_model->get_noticeView();
@@ -100,9 +100,14 @@ class Home extends CI_Controller {
 				$li->modidate = "";
 			}
 
-
 		$total  = $this->ajax_model->getTotal($query);
 
+			if($li->notice == 1)
+			{
+				$index = '<b>공지</b>';
+			} else {
+				$index = $total - ($curPage-1) * $rowsPage - $key;
+			}
 
 		$row = array (
 			"idx"			=> $li->idx,
@@ -114,7 +119,7 @@ class Home extends CI_Controller {
 			"fileid"		=> $li->fileid,
 			"notice"		=> $li->notice,
 			"modidate"		=> $li->modidate,
-			"index"  		=> $total - ($curPage-1) * $rowsPage - $key,
+			"index"  		=> $index,
 			"new"			=> Ajax_model::displayNew($li->regdate)
 		);
 

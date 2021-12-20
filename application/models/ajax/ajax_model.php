@@ -17,6 +17,28 @@ class Ajax_model extends CI_Model {
 
     }
 
+
+    //리스트 출력
+	function pluginList($param, $start, $rowsPage) {
+
+		$start = ($start - 1) * $rowsPage;
+
+		if(is_array($param)) {
+			$whereArr =	$this->_whereParam($param);
+
+		}
+
+		$query = 'SELECT * FROM board ';
+
+		if(is_array($param)) {
+			$query .= 'WHERE ' . $whereArr;
+		}
+
+		$query .= 'ORDER BY notice DESC, regdate DESC limit ' . $start . ', ' . $rowsPage;
+
+		return $this->db->query($query)->result();
+	}
+
     //리스트 출력
 	function get_view($param, $start, $rowsPage) {
 

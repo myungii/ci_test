@@ -309,6 +309,17 @@ function add_write(name, title, content, notice, upload_file) {
 var board_list;
 
 $(function() {
+
+	function Lists(list) {
+			this.idx		= list.idx;
+			this.title		= list.title;
+			this.name		= list.name;
+			this.content	= list.content;
+			this.regdate	= list.regdate;
+			this.cnt		= list.cnt;
+
+	}
+
 	board_list = $("#board_list").DataTable({
 		"dom" : 't<"pagination"p>r',
         "info" : false,
@@ -349,8 +360,8 @@ $(function() {
 
 					var result = {
 									draw: res.draw,
-									data: res.list,
-									notice : res.notice_list,
+									data: res.list, //일반 게시글 리스트
+									notice : res.notice_list, //공지사항 리스트
 									recordsTotal : res.total,
 									recordsFiltered : res.total
 								};
@@ -382,7 +393,6 @@ $(function() {
 
 
 });
-
 
 
 
